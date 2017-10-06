@@ -5,7 +5,7 @@
 import mongoose, { Schema } from 'mongoose';
 
 // Define movie schema
-var movieSchema = new Schema({
+const movieSchema = new Schema({
     title: {
         type: String,
         unique: true,

@@ -3,7 +3,6 @@
  **/
 
 import express from 'express';
-import mongodb from 'mongodb';
 
 /*** HTTP server initialization ***/
 
