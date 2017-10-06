@@ -22,13 +22,12 @@ const server = app.listen(3000, () => {
     const { address, port } = server.address();
     console.log(`Listening at http://${address}:${port}`);
 });
-
 /*** MongoDb connection ***/
-
+/*
 const MongoClient = require("mongodb").MongoClient;
 
 MongoClient.connect("mongodb://localhost/Hoomie", function(error, db) {
     if (error) throw new error("Error connecting to database");
 
     console.log("Success in connecting to Hoomie database");
-});
+});*/
