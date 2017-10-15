@@ -23,7 +23,8 @@
     "express": "^4.16.1",
     "moment": "^2.18.1",
     "mongodb": "^2.2.31",
+    "mongoose": "latest",
     "morgan": "^1.9.0",
-    "mongoose": "latest"
+    "socket.io": "^2.0.3"
   }
 }

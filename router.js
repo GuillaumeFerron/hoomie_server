@@ -4,13 +4,12 @@
 
 import express, { Router } from 'express';
 // Import index action from movies controller
-import { index } from './controllers/movies';
+import { temperature } from './controllers/temperature';
 
 // Initialize the router
 const router = Router();
 
-// Handle /movies.json route with index action from movies controller
-router.route('/movies.json')
-    .get(index);
+router.route('/temperature')
+    .get(temperature);
 
 export default router;

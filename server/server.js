@@ -16,7 +16,7 @@ const app = express();
 // Logger that outputs all requests into the console
 app.use(morgan('combined'));
 // Use v1 as prefix for all API endpoints
-app.use('/v1', router);
+app.use('/', router);
 
 const server = app.listen(3000, () => {
     const { address, port } = server.address();

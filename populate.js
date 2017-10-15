@@ -3,7 +3,7 @@
  **/
 
 import mongoose from 'mongoose';
-import Movie from './models/movie';
+import Movie from './models/temperature';
 
 const movies = [
     {
