@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 import router from '../router';
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost/movies');
+mongoose.connect('mongodb://localhost/temperatures');
 
 // Initialize http server
 const app = express();
@@ -18,16 +18,7 @@ app.use(morgan('combined'));
 // Use v1 as prefix for all API endpoints
 app.use('/', router);
 
-const server = app.listen(3000, () => {
+const server = app.listen(8080, () => {
     const { address, port } = server.address();
     console.log(`Listening at http://${address}:${port}`);
 });
-/*** MongoDb connection ***/
-/*
-const MongoClient = require("mongodb").MongoClient;
-
-MongoClient.connect("mongodb://localhost/Hoomie", function(error, db) {
-    if (error) throw new error("Error connecting to database");
-
-    console.log("Success in connecting to Hoomie database");
-});*/

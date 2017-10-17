@@ -5,16 +5,10 @@
 import mongoose, { Schema } from 'mongoose';
 
 // Define movie schema
-const movieSchema = new Schema({
-    title: {
-        type: String,
-        unique: true,
-    },
-    poster: String,
-    genre: String,
-    days: Array,
-    times: Array,
+const temperatureSchema = new Schema({
+    date: String,
+    temperature: Number
 });
 
 // Export Mongoose model
-export default mongoose.model('movie', movieSchema);
+export default mongoose.model('temperature', temperatureSchema);
