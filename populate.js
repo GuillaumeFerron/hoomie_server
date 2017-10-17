@@ -42,5 +42,3 @@ temperatures.map(data => {
     // and save it into the database
     temperature.save();
 });
-
-return;
