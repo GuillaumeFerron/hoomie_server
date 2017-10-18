@@ -4,10 +4,8 @@
 import Temperature from '../models/temperature'
 
 export const temperature = (req, res, next) => {
-    Temperature.find().lean().exec((err, temperatures) => res.json(
-        // Iterate through each movie
-        { temperature: temperatures.map(temperature => ({
-            ...temperature
-        }))}
+    Temperature.find({}, {'temperature': 1, _id: 0}).sort({_id:-1}).limit(1).exec((err, temperatures) => res.json(
+
+        { temperature: temperatures}
     ));
 };
