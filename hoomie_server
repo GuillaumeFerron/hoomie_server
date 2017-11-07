@@ -1,0 +1,15 @@
+#! /bin/sh
+# /etc/init.d/hoomie_server
+
+mongostatus="$(ps -edaf | grep mongo | grep -v grep)"
+
+while [ -z $mongostatus ];
+do
+	mongod --fork --syslog
+	mongostatus="$(ps -edaf | grep mongo | grep -v grep)"
+	echo "$mongostatus"
+done
+
+cd ~/hoomie_server
+killall node
+npm start &
