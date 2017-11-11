@@ -7,29 +7,53 @@ import Temperature from './models/temperature';
 
 const temperatures = [
     {
-        date : '16102017210537',
-        temperature: 10
+        "_id" : ObjectId("59e60908cab6482c943c8eb4"),
+        "date" : "2017-10-16-21-05-37",
+        "temperature" : 10,
+        "__v" : 0
     },
     {
-        date : '16102017210545',
-        temperature: 12
+        "_id" : ObjectId("59e60908cab6482c943c8eb5"),
+        "date" : "2017-10-16-21-05-45",
+        "temperature" : 12,
+        "__v" : 0
     },
     {
-        date : '16102017210550',
-        temperature: 14
+        "_id" : ObjectId("59e60908cab6482c943c8eb9"),
+        "date" : "2017-10-16-21-06-05",
+        "temperature" : 20,
+        "__v" : 0
     },
     {
-        date : '16102017210555',
-        temperature: 16
+        "_id" : ObjectId("59e60908cab6482c943c8eb7"),
+        "date" : "2017-10-16-21-05-55",
+        "temperature" : 16,
+        "__v" : 0
     },
     {
-        date : '16102017210600',
-        temperature: 18
+        "_id" : ObjectId("59e60908cab6482c943c8eb8"),
+        "date" : "2017-10-16-21-06-00",
+        "temperature" : 18,
+        "__v" : 0
     },
     {
-        date : '16102017210605',
-        temperature: 20
+        "_id" : ObjectId("59e60908cab6482c943c8eb6"),
+        "date" : "2017-10-16-21-05-50",
+        "temperature" : 14,
+        "__v" : 0
     },
+    {
+        "_id" : ObjectId("59e7a126c4c67010dba4791d"),
+        "date" : "2017-10-17-20-44-55",
+        "temperature" : 32,
+        "__v" : 0
+    },
+    {
+        "_id" : ObjectId("59e7a249c4c67010dba47978"),
+        "date" : "2017-10-17-21-05-50",
+        "temperature" : 50,
+        "__v" : 0
+    }
 ];
 
 // Connect to MongoDB
