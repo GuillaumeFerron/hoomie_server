@@ -6,14 +6,14 @@ import Temperature from '../models/temperature'
 //All temperatures
 export const allTemperatures = (req, res, next) => {
     Temperature.find({}, {}).exec((err, temperatures) => res.json(
-        { temperature: temperatures}
+        { data: temperatures}
     ));
 };
 
 //Last Temperature
 export const lastTemperature = (req, res, next) => {
     Temperature.find({}, {}).sort({_id:-1}).limit(1).exec((err, temperatures) => res.json(
-        { temperature: temperatures}
+        { data: temperatures}
     ));
 };
 
@@ -42,7 +42,7 @@ export const periodTemperature = (req, res, next) => {
                 }
             }
         }
-        return res.json({ temperature: sortedTemp}
+        return res.json({ data: sortedTemp}
     )});
 };
 
@@ -71,7 +71,7 @@ export const dayTemperature = (req, res, next) => {
                 }
             }
         }
-        return res.json({ temperature: sortedTemp}
+        return res.json({ data: sortedTemp}
         )});
 };
 
@@ -100,7 +100,7 @@ export const monthTemperature = (req, res, next) => {
                 }
             }
         }
-        return res.json({ temperature: sortedTemp}
+        return res.json({ data: sortedTemp}
         )});
 };
 
@@ -120,6 +120,6 @@ export const yearTemperature = (req, res, next) => {
                 }
             }
         }
-        return res.json({ temperature: sortedTemp}
+        return res.json({ data: sortedTemp}
         )});
 };
