@@ -8,3 +8,5 @@ morgan: An HTTP request logger middleware for node.
 
 Object Data Model ("ODM") / Object Relational Model ("ORM"). An ODM/ORM represents the website's data as JavaScript objects, which are then mapped to the underlying database.
 
+For the database : 
+Eeach Residency has a different database in which there are persons, rooms and credentials. In each romm there are different collection : temperatures, gas data, lights and solar lights, sounds ... in each collection there are many documents representing a date and the data we need .
