@@ -24,7 +24,7 @@ router.route('/temperature/day/:date').get(TempController.dayTemperature);
 //Specific month temperature
 router.route('/temperature/month/:date').get(TempController.monthTemperature);
 
-//Specific month temperature
+//Specific year temperature
 router.route('/temperature/year/:date').get(TempController.yearTemperature);
 
 export default router;
