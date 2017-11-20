@@ -55,9 +55,9 @@ const temperatures = [
         "__v" : 0
     }
 ];
-
+var mongoDB = process.env.MONGODB_URI || 'mongodb://localhost/temperatures';
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost/temperatures');
+mongoose.connect(mongoDB);
 
 // Go through each movie
 temperatures.map(data => {

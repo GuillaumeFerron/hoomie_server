@@ -4,7 +4,7 @@
 
 import mongoose, { Schema } from 'mongoose';
 
-// Define movie schema
+// Define temperature schema
 const temperatureSchema = new Schema({
     date: String,
     temperature: Number
