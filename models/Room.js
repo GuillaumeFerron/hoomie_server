@@ -7,9 +7,10 @@ import Temperature from './temperature';
 
 // Define room schema
 const roomSchema = new Schema({
-    _id : Schema.Types.ObjectId,
+
     number:{type:Number,required:true},
-    temperature: [{type:Schema.Types.ObjectId,ref:'Temperature'}]
+    temperature: [{type:Schema.Types.ObjectId,ref:'Temperature'}],
+    temperatureAverage : {type:Number}
     //sound :[{type:Schema.Types.ObjectId,ref:'sound'}],
     //light :[{type:Schema.Types.ObjectId,ref:'light'}],
     //solar_light:[{type:Schema.Types.ObjectId,ref:'solar_light'}],

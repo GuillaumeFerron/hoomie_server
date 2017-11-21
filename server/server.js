@@ -9,9 +9,14 @@ import router from '../router';
 import compression from 'compression';
 import helmet from 'helmet';
 
-var mongoDB = process.env.MONGODB_URI || 'mongodb://localhost/temperatures';
+var mongoDB = process.env.MONGODB_URI || 'mongodb://developer:fefelili@ds117136.mlab.com:17136/hoomie';
 // Connect to MongoDB
-mongoose.connect(mongoDB);
+mongoose.connect(mongoDB,{
+    useMongoClient: true
+});
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // Initialize http server
 const app = express();

@@ -4,7 +4,7 @@
 
 import mongoose, { Schema } from 'mongoose';
 import Credential from './Credential';
-import Person from './Person';
+import Person from './User';
 import Room from './Room';
 import moment from 'moment';
 
@@ -14,7 +14,7 @@ const personSchema = new Schema({
     last_name: {type:String,uppercase:true,required:true,max: 100},
     date_of_birth :{type:Date},
     room : {type:Schema.Types.ObjectId, ref: 'Room'},
-    friends : [Person],
+    //friends : [Person],
     access : {type:Schema.Types.ObjectId, ref: 'Credential'}
 });
 

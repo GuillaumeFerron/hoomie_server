@@ -6,7 +6,6 @@ import mongoose, { Schema } from 'mongoose';
 
 // Define credential schema
 const credentialSchema = new Schema({
-    _id : Schema.Types.ObjectId,
     login:{type:String,required:true},
     password: {type:String,required:true},
     //allows to know if it's the administrator or not

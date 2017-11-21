@@ -7,7 +7,7 @@ import mongoose, { Schema } from 'mongoose';
 // Define temperature schema
 const temperatureSchema = new Schema({
     date: String,
-    temperature: Number
+    value: Number
 });
 
 // Export Mongoose model
