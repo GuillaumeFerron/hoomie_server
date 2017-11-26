@@ -163,18 +163,30 @@ async.series([
                 Room.findOne(function (err,r) {
                     if(err) return console.error(err);
                     r.inhabitants.push(user);
-                    r.save();
-                    console.log(r);
+                    r.populate("temperatures","value -_id",function (err,room) {
+                        var average = 0.0;
+                        room.temperatures.forEach(function (t) {
+                            //console.log(t.value);
+                            average +=t.value;
+                        });
+                        average = average/room.temperatures.length;
+                        console.log(average);
+                        r.temperatureAverage = average;
+                        r.save();
+                    });
+                    console.log(r.temperatures);
+
+                    //console.log(r);
                     Temperature.update({},{room : r},{multi:true},function(err,numberAffected){
                         if(err) return console.error(err);
-                        console.log("nb doc modified :"+numberAffected);
+                       // console.log("nb doc modified :"+numberAffected);
                     });
                 });
                 Credential.findOne(function (err,c) {
                     if(err) return console.error(err);
                     c.user_id = user;
                     c.save();
-                    console.log(c);
+                    //console.log(c);
                 });
 
 
