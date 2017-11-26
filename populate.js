@@ -5,7 +5,7 @@
 import mongoose from 'mongoose';
 import async from 'async';
 import phs from 'password-hash-and-salt';
-import Temperature from './models/temperature';
+import Temperature from './models/Temperature';
 import Room from './models/Room';
 import User from './models/User';
 import Credential from './models/Credential';
@@ -18,35 +18,55 @@ mongoose.connect(mongoDB,{
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.dropDatabase();
 
 var users=[];
 var credential =[];
 var rooms=[];
 var temps=[];
 
+userCreate("Lisa","MARTINI","1994-05-12")
 
-function userCreate(first_name, family_name, d_birth,room,access, cb) {
+function userCreate(first_name, family_name, d_birth,cb) {
     var userDetail = {first_name:first_name , last_name: family_name };
     if (d_birth != false) userDetail.date_of_birth = d_birth;
-    if (room != false) userDetail.room = room;
-
-    if (access!= false) userDetail.access = access;
-
-
     var user = new User(userDetail);
 
     user.save(function (err) {
         if (err) {
-            cb(err, null);
             return
         }
-        console.log('New User: ' + user);
+        var access = credentialCreate("ewilys","moi",false,user._id);
+        console.log(access);
+        access.save(function (err) {
+            if (err) {
+                return
+            }
+            user.access = access;
+            user.save();
+            credential.push(access)
+
+        }  );
+
+        var room = createRoom(205, temps, 15, user._id);
+        console.log(room);
+        room.save(function (err) {
+            if (err) {
+                return
+            }
+            user.room = room;
+            user.save();
+            rooms.push(room)
+        }  );
+        createTemperatures(room);
+        //console.log("temps:"+temps);
         users.push(user);
-        cb(null, user)
+        console.log(user);
     }  );
+
 }
 
-function credentialCreate(login,pwd,admin, cb) {
+function credentialCreate(login,pwd,admin,user_id) {
     var credentialDetail = {login:login };
     credentialDetail.password = pwd ;
     // Creating hash and salt
@@ -57,103 +77,56 @@ function credentialCreate(login,pwd,admin, cb) {
 
             // Store hash (incl. algorithm, iterations, and salt)
             credentialDetail.password = hash;
-            console.log(hash);
+            console.log(credentialDetail.password);
 
         });
     }
 
     credentialDetail.admin = admin;
+    credentialDetail.user_id = user_id;
 
-    var credit = new Credential(credentialDetail);
-
-    credit.save(function (err) {
-        if (err) {
-            cb(err, null)
-            return
-        }
-        console.log('New credential: ' + credit);
-        credential.push(credit)
-        cb(null, credit)
-    }  );
+    return new Credential(credentialDetail);
 }
 
-function createRoom(number, temperatures, temperatureAverage,cb){
-    var roomDetail = {number:number,temperature: temperatures, temperatureAverage:temperatureAverage};
-
-    var room = new Room(roomDetail);
-
-    room.save(function (err) {
-        if (err) {
-            cb(err, null)
-            return
-        }
-        console.log('New Room: ' + room);
-        rooms.push(room)
-        cb(null, room)
-    }  );
+function createRoom(number, temperatures, temperatureAverage,user_id){
+    var roomDetail = {number:number,temperatures:temperatures, temperatureAverage:temperatureAverage,inhabitants:[]};
+    roomDetail.inhabitants.push(user_id);
+    return new Room(roomDetail);
 
 }
 
-function createTemp(date, temperature, cb){
-    var tempDetail = {date:date,value: temperature};
+function createTemp(date, temperature,room){
+    var tempDetail = {date:date,value: temperature,room:room._id};
 
     var temp = new Temperature(tempDetail);
 
     temp.save(function (err) {
         if (err) {
-            cb(err, null)
             return
         }
-        console.log('New Temp: ' + temp);
+        //console.log('room ' + room);
         temps.push(temp)
-        cb(null, temp)
+
     }  );
 
 }
 
 
-function createTemperatures(cb) {
-    async.parallel([
-            function(callback) {
-                createTemp("2017-10-16-21-05-37", '10',callback);
-            },
-            function(callback) {
-                createTemp("2017-10-16-21-05-45", '12',callback);
-            },
-            function(callback) {
-                createTemp("2017-10-16-21-06-05", '20',callback);
-            },
-            function(callback) {
-                createTemp("2017-10-16-21-05-55", '16',callback);
-            },
-            function(callback) {
-                createTemp("2017-10-16-21-06-00",'18',callback);
-            },
-            function(callback) {
-                createTemp("2017-10-16-21-05-50", '14',callback);
-            },
-            function(callback) {
-                createTemp("2017-10-17-20-44-55", '32',callback);
-            },
-            function(callback) {
-                createTemp("2017-10-17-21-05-50", '50',callback);
-            },
-        ],
-        // optional callback
-        cb);
+function createTemperatures(room) {
+    createTemp("2017-10-16-21-05-37", '10',room);
+    createTemp("2017-10-16-21-05-45", '12',room);
+    createTemp("2017-10-16-21-06-05", '20',room);
+    createTemp("2017-10-16-21-05-55", '16',room);
+    createTemp("2017-10-16-21-06-00", '18',room);
+    createTemp("2017-10-16-21-05-50", '14',room);
+    createTemp("2017-10-17-20-44-55", '32',room);
+    createTemp("2017-10-17-21-05-50", '50',room);
+
 }
 
-async.series([
-        createTemperatures,
-        function(callback) {
-            createRoom(205, temps, 15, callback);
-        },
-        function(callback) {
-            credentialCreate("ewilys","moi",false,callback);
-        },
-        function(callback) {
-            userCreate("Lisa","MARTINI","1994-05-12",rooms[0],credential[0],callback);
-        }
+/*async.series([
+
+        userCreate("Lisa","MARTINI","1994-05-12")
     ],
 // optional callback
     function(err, results) {
@@ -161,9 +134,15 @@ async.series([
             console.log('FINAL ERR: '+err);
         }
         else {
-            console.log('User: '+users[0]);
+            User.findOne(function(err,users){
+                if(err)return console.error(err);
+                console.log(users);
+                users.populate("access","login",function(err,user){
+                    if(err)return console.error(err);
+                    console.log(user);});
+            });
 
         }
         //All done, disconnect from database
-       db.close();
-    });
+        db.close();
+    });*/

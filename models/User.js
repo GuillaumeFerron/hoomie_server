@@ -4,7 +4,7 @@
 
 import mongoose, { Schema } from 'mongoose';
 import Credential from './Credential';
-import Person from './User';
+import User from './User';
 import Room from './Room';
 import moment from 'moment';
 
@@ -35,4 +35,4 @@ personSchema
 
 
 // Export Mongoose model
-export default mongoose.model('person', personSchema);
+export default mongoose.model('User', personSchema);

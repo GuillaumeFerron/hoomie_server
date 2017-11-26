@@ -3,12 +3,14 @@
  **/
 
 import mongoose, { Schema } from 'mongoose';
+import Room from './Room';
 
 // Define temperature schema
 const temperatureSchema = new Schema({
     date: String,
-    value: Number
+    value: Number,
+    room : {type: Schema.Types.ObjectId, ref: 'Room'}
 });
 
 // Export Mongoose model
-export default mongoose.model('temperature', temperatureSchema);
+export default mongoose.model('Temperature', temperatureSchema);

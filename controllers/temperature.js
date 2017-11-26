@@ -1,7 +1,7 @@
 /**
  Created by Guillaume Ferron on the 10/6/2017
  **/
-import Temperature from '../models/temperature'
+import Temperature from '../models/Temperature'
 
 //All temperatures
 export const allTemperatures = (req, res, next) => {

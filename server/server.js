@@ -2,9 +2,12 @@
  Created by Guillaume Ferron on the 10/1/2017
  **/
 
-import express from 'express';
+import User from '../models/User';
+import Credential from '../models/Credential';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
+import express from 'express';
+
 import router from '../router';
 import compression from 'compression';
 import helmet from 'helmet';
@@ -17,6 +20,14 @@ mongoose.connect(mongoDB,{
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+/*User.findOne(function(err,users){
+    if(err)return console.error(err);
+    console.log(users);
+    users.populate("access","login",function(err,user){
+        if(err)return console.error(err);
+        console.log(user);});
+});*/
 
 // Initialize http server
 const app = express();
