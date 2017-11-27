@@ -10,6 +10,7 @@ import router from '../router';
 import compression from 'compression';
 import helmet from 'helmet';
 
+var port = process.env.PORT || 8080
 var mongoDB = process.env.MONGODB_URI || 'mongodb://developer:fefelili@ds117136.mlab.com:17136/hoomie';
 // Connect to MongoDB
 mongoose.connect(mongoDB,{
@@ -33,7 +34,6 @@ app.use(compression());
 // Use v1 as prefix for all API endpoints
 app.use('/', router);
 
-const server = app.listen(8080, () => {
-    const { address, port } = server.address();
-    console.log(`Listening at http://${address}:${port}`);
+const server = app.listen(port, () => {
+    console.log(`Listening at http://hoomieserver.herokuapp.com:${port}`);
 });

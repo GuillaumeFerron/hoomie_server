@@ -1,6 +1,9 @@
 # hoomie_server
 
+27/11/2017:
+heroku restart --app hoomieserver
 
+________________________________________________________________________________________________________________________
 26/11/17:
 
  Warning : we must be extremely careful with how our model are exported : if there is a capital we must use a capital when we referenced it.
