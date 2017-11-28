@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import mongoose from 'mongoose';
 import express from 'express';
 
+import Temperature from '../models/Temperature';
 import router from '../router';
 import compression from 'compression';
 import helmet from 'helmet';
@@ -19,7 +20,6 @@ mongoose.connect(mongoDB,{
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
 
 
 // Initialize http server

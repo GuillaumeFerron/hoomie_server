@@ -57,7 +57,7 @@ export const dayTemperature = (req, res, next) => {
             let curr = temperatures[i].date.split("-");
             let verif = true;
             //Check that the two formats are correct
-            if(curr.length === period.length) {
+
                 //Go through athe first three fields of date, hence the given day
                 for (let j = 0; j < 3; j++) {
                     //If the current field is lower than the one given as a url parameter, then it is anterior
@@ -69,7 +69,7 @@ export const dayTemperature = (req, res, next) => {
                 if(verif) {
                     sortedTemp.push(temperatures[i]);
                 }
-            }
+            
         }
         return res.json({ data: sortedTemp}
         )});
@@ -86,7 +86,7 @@ export const monthTemperature = (req, res, next) => {
             let curr = temperatures[i].date.split("-");
             let verif = true;
             //Check that the two formats are correct
-            if(curr.length === period.length) {
+
                 //Go through athe first two fields of date, hence the given month
                 for (let j = 0; j < 2; j++) {
                     //If the current field is lower than the one given as a url parameter, then it is anterior
@@ -98,7 +98,7 @@ export const monthTemperature = (req, res, next) => {
                 if(verif) {
                     sortedTemp.push(temperatures[i]);
                 }
-            }
+
         }
         return res.json({ data: sortedTemp}
         )});
@@ -114,11 +114,11 @@ export const yearTemperature = (req, res, next) => {
         for(let i = 0; i < temperatures.length; i++) {
             let curr = temperatures[i].date.split("-");
             //Check that the two formats are correct
-            if(curr.length === period.length) {
-                if(parseInt(curr[0]) === parseInt(period[0])) {
-                    sortedTemp.push(temperatures[i]);
-                }
+
+            if(parseInt(curr[0]) === parseInt(period[0])) {
+                sortedTemp.push(temperatures[i]);
             }
+
         }
         return res.json({ data: sortedTemp}
         )});

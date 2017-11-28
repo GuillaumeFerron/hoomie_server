@@ -2,7 +2,7 @@
 
 27/11/2017:
 heroku restart --app hoomieserver
-
+ Warning to push anything on heroku server once need to use git shell + heroku login otherwise it doesn't work
 ________________________________________________________________________________________________________________________
 26/11/17:
 
