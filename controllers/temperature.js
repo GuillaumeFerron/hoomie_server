@@ -69,7 +69,7 @@ export const dayTemperature = (req, res, next) => {
                 if(verif) {
                     sortedTemp.push(temperatures[i]);
                 }
-            
+
         }
         return res.json({ data: sortedTemp}
         )});
