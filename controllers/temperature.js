@@ -131,4 +131,6 @@ export const yearTemperature = (req, res, next) => {
 //addDoc
 export const addTemp = (req,res,next) => {
     console.log(req);
+    res.json(req);
+   
 };
