@@ -3,6 +3,8 @@
  **/
 import Temperature from '../models/Temperature'
 
+
+//GET fonction
 //All temperatures
 export const allTemperatures = (req, res, next) => {
     Temperature.find({}, {}).exec((err, temperatures) => res.json(
@@ -122,4 +124,11 @@ export const yearTemperature = (req, res, next) => {
         }
         return res.json({ data: sortedTemp}
         )});
+};
+
+
+//Post function
+//addDoc
+export const addTemp = (req,res,next) => {
+    console.log(req);
 };

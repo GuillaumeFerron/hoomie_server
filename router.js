@@ -9,6 +9,8 @@ import * as TempController from './controllers/temperature';
 // Initialize the router
 const router = Router();
 
+
+//GET Temp routes
 //All temperatures
 router.route('/temperature/all').get(TempController.allTemperatures);
 
@@ -27,4 +29,7 @@ router.route('/temperature/month/:date').get(TempController.monthTemperature);
 //Specific year temperature
 router.route('/temperature/year/:date').get(TempController.yearTemperature);
 
+
+//POST Temp Routes
+router.route('/temperature/addDoc').post(TempController.addTemp);
 export default router;
