@@ -133,7 +133,7 @@ export const yearTemperature = (req, res, next) => {
 var temps=[];
 
 export const addTemp = (req,res,next) => {
-    console.log(req.url,req.data);
+    console.log(req.url,req.body);
     let body = [];
     req.on('data', (chunk) => {
         body.push(chunk);
