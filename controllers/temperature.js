@@ -134,14 +134,6 @@ var temps=[];
 
 export const addTemp = (req,res,next) => {
     console.log(req.url,req.body);
-    let body = [];
-    req.on('data', (chunk) => {
-        body.push(chunk);
-    }).on('end', () => {
-        body = Buffer.concat(body).toString();
-        // at this point, `body` has the entire request body stored in it as a string
-    });
-    console.log(body);
     temps=[];
     /*Room.findOne({'number':body.room},function (err,r){
         if(err) return console.error(err);
