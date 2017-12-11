@@ -5,7 +5,7 @@
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 import express from 'express';
-
+import bodyParser from 'body-parser';
 import Temperature from '../models/Temperature';
 import router from '../router';
 import compression from 'compression';
@@ -31,6 +31,8 @@ app.use(helmet());
 app.use(morgan('combined'));
 //compression middleware allowing to compression http response to client -need to be add before any route
 app.use(compression());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended :true}));
 // Use v1 as prefix for all API endpoints
 app.use('/', router);
 
