@@ -118,28 +118,28 @@ function createTemp(date, temperature, cb){
 function createTemperatures(cb) {
     async.parallel([
             function(callback) {
-                createTemp("2017-10-16-21-05-37", '10',callback);
+                createTemp("2017-10-16-21-05-37", '20.10',callback);
             },
             function(callback) {
-                createTemp("2017-10-16-21-05-45", '12',callback);
+                createTemp("2017-10-16-23-05-45", '22.65',callback);
             },
             function(callback) {
-                createTemp("2017-10-16-21-06-05", '20',callback);
+                createTemp("2017-10-17-08-06-05", '23.45',callback);
             },
             function(callback) {
-                createTemp("2017-10-16-21-05-55", '16',callback);
+                createTemp("2017-10-17-15-05-55", '22.50',callback);
             },
             function(callback) {
-                createTemp("2017-10-16-21-06-00",'18',callback);
+                createTemp("2017-10-18-21-06-00",'20.59',callback);
             },
             function(callback) {
-                createTemp("2017-10-16-21-05-50", '14',callback);
+                createTemp("2017-11-05-04-05-50", '24.11',callback);
             },
             function(callback) {
-                createTemp("2017-10-17-20-44-55", '32',callback);
+                createTemp("2017-11-19-20-44-55", '28.60',callback);
             },
             function(callback) {
-                createTemp("2017-10-17-21-05-50", '50',callback);
+                createTemp("2017-11-25-12-05-50", '25.78',callback);
             },
         ],
         // optional callback

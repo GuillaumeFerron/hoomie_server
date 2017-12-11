@@ -1,7 +1,8 @@
 /**
  Created by Guillaume Ferron on the 10/6/2017
  **/
-import Temperature from '../models/Temperature'
+import Temperature from '../models/Temperature';
+import Room from '../models/Room';
 
 
 //GET fonction
@@ -129,6 +130,8 @@ export const yearTemperature = (req, res, next) => {
 
 //Post function
 //addDoc
+var temps=[];
+
 export const addTemp = (req,res,next) => {
     console.log(req.url,req.data);
     let body = [];
@@ -139,5 +142,39 @@ export const addTemp = (req,res,next) => {
         // at this point, `body` has the entire request body stored in it as a string
     });
     console.log(body);
+    temps=[];
+    /*Room.findOne({'number':body.room},function (err,r){
+        if(err) return console.error(err);
+        createTemp(body.date,body.value,r);
+        Array.prototype.push.apply(r.temperatures,temps);
+        r.populate("temperatures","value -_id",function (err,room) {
+            var average = 0.0;
+            room.temperatures.forEach(function (t) {
+                //console.log(t.value);
+                average +=t.value;
+            });
+            average = average/room.temperatures.length;
+            console.log(average);
+            r.temperatureAverage = average;
+            r.save();
+        });
+        console.log(r.temperatures);
+
+    });*/
 
 };
+
+function createTemp(date, temperature,room){
+    var tempDetail = {date:date,value: temperature,room:room};
+
+    var temp = new Temperature(tempDetail);
+
+    temp.save(function (err) {
+        if (err) {
+            return
+        }
+        console.log('New Temp: ' + temp);
+        temps.push(temp);
+    }  );
+
+}
