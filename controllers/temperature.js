@@ -145,7 +145,6 @@ export const addTemp = (req,res,next) => {
                     createTemp(d.date,d.value,r,callback);
                 },
                 function(callback){
-                    r.temperatures = r.temperatures.concat(temps);
                     r.populate("temperatures","value -_id",function (err,room) {
                         var average = 0.0;
                         room.temperatures.forEach(function (t) {
@@ -157,7 +156,7 @@ export const addTemp = (req,res,next) => {
                         r.temperatureAverage = average;
                         r.save();
                     });
-                    console.log(r.temperatures);
+                    console.log(r);
                 }
             ]);
 
@@ -180,8 +179,10 @@ function createTemp(date, temperature,room,cb){
             return
         }
         console.log('New Temp: ' + temp);
+        room.temperatures.push(temp);
         temps.push(temp)
         cb(null, temp)
     }  );
+    return temp;
 
 }
