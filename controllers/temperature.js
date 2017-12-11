@@ -133,16 +133,14 @@ export const yearTemperature = (req, res, next) => {
 var temps=[];
 
 export const addTemp = (req,res,next) => {
-    console.log(req.url,req.body.data.length, req.body.data);
+    //console.log(req.url,req.body.data.length, req.body.data);
     var docs = req.body.data;
     temps=[];
     docs.forEach(function(d){
-       console.log(d.date,d.value,d.room);
         Room.findOne({'number':d.room},function (err,r){
             if(err) return console.error(err);
-            console.log(r);
             createTemp(d.date,d.value,r);
-            Array.prototype.push.apply(r.temperatures,temps);
+            r.temperatures = r.temperatures.concat(temps);
             r.populate("temperatures","value -_id",function (err,room) {
                 var average = 0.0;
                 room.temperatures.forEach(function (t) {
