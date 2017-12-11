@@ -134,10 +134,12 @@ var temps=[];
 
 export const addTemp = (req,res,next) => {
     console.log(req.url,req.body.data.length, req.body.data);
-    docs = req.body.data;
+    var docs = req.body.data;
     docs.forEach(function(d){
        console.log(d.date,d.value,d.room);
     });
+
+    res.end("yes");
     temps=[];
     /*Room.findOne({'number':body.room},function (err,r){
         if(err) return console.error(err);
