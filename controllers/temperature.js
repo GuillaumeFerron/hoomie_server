@@ -133,7 +133,7 @@ export const yearTemperature = (req, res, next) => {
 var temps=[];
 
 export const addTemp = (req,res,next) => {
-    console.log(req.url,req.body);
+    console.log(req.url,req.body.len, req.body.data);
     temps=[];
     /*Room.findOne({'number':body.room},function (err,r){
         if(err) return console.error(err);
