@@ -3,6 +3,7 @@
  **/
 import Temperature from '../models/Temperature';
 import Room from '../models/Room';
+import async from 'async';
 
 
 //GET fonction
@@ -139,20 +140,26 @@ export const addTemp = (req,res,next) => {
     docs.forEach(function(d){
         Room.findOne({'number':d.room},function (err,r){
             if(err) return console.error(err);
-            createTemp(d.date,d.value,r);
-            r.temperatures = r.temperatures.concat(temps);
-            r.populate("temperatures","value -_id",function (err,room) {
-                var average = 0.0;
-                room.temperatures.forEach(function (t) {
-                    //console.log(t.value);
-                    average +=t.value;
-                });
-                average = average/room.temperatures.length;
-                console.log(average);
-                r.temperatureAverage = average;
-                r.save();
-            });
-            console.log(r.temperatures);
+            async.series([
+                function(callback){
+                    createTemp(d.date,d.value,r,callback);
+                },
+                function(callback){
+                    r.temperatures = r.temperatures.concat(temps);
+                    r.populate("temperatures","value -_id",function (err,room) {
+                        var average = 0.0;
+                        room.temperatures.forEach(function (t) {
+                            //console.log(t.value);
+                            average +=t.value;
+                        });
+                        average = average/room.temperatures.length;
+                        console.log(average);
+                        r.temperatureAverage = average;
+                        r.save();
+                    });
+                    console.log(r.temperatures);
+                }
+            ]);
 
         });
 
@@ -162,17 +169,19 @@ export const addTemp = (req,res,next) => {
 
 };
 
-function createTemp(date, temperature,room){
+function createTemp(date, temperature,room,cb){
     var tempDetail = {date:date,value: temperature,room:room};
 
     var temp = new Temperature(tempDetail);
 
     temp.save(function (err) {
         if (err) {
+            cb(err, null)
             return
         }
         console.log('New Temp: ' + temp);
-        temps.push(temp);
+        temps.push(temp)
+        cb(null, temp)
     }  );
 
 }
