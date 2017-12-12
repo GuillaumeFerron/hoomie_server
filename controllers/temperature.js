@@ -142,12 +142,13 @@ export const addTemp = (req,res,next) => {
             if(err) return console.error(err);
             async.series([
                 function(callback){
+                console.log("first function", d.date);
                     var newTemp = createTemp(d.date,d.value,r,callback);
 
                 },
                 function(callback){
 
-                    console.log(r.temperatures);
+                    console.log("second function ", r.temperatures.length);
                     r.populate("temperatures","value -_id",function (err,room) {
                         var average = 0.0;
                         room.temperatures.forEach(function (t) {
@@ -165,11 +166,9 @@ export const addTemp = (req,res,next) => {
         });
 
     });
-
+    console.log("finish");
     res.end("yes");
-    Room.findOne({},function(err,r){
-        console.log(r);
-    });
+
 
 };
 
