@@ -136,7 +136,7 @@ var temps=[];
 export const addTemp = (req,res,next) => {
     //console.log(req.url,req.body.data.length, req.body.data);
     var docs = req.body.data;
-    temps=[];
+
     docs.forEach(function(d){
         Room.findOne({'number':d.room},function (err,r){
             if(err) return console.error(err);
@@ -146,6 +146,8 @@ export const addTemp = (req,res,next) => {
 
                 },
                 function(callback){
+
+                    console.log(r.temperatures);
                     r.populate("temperatures","value -_id",function (err,room) {
                         var average = 0.0;
                         room.temperatures.forEach(function (t) {
@@ -157,7 +159,6 @@ export const addTemp = (req,res,next) => {
                         r.temperatureAverage = average;
                         r.save();
                     });
-                    console.log(r);
                 }
             ]);
 
@@ -166,6 +167,9 @@ export const addTemp = (req,res,next) => {
     });
 
     res.end("yes");
+    Room.findOne({},function(err,r){
+        console.log(r);
+    });
 
 };
 
@@ -182,8 +186,7 @@ function createTemp(date, temperature,room,cb){
         console.log('New Temp: added');
         room.temperatures.push(temp);
         room.save();
-        console.log(room.temperatures);
-        temps.push(temp)
+
         cb(null, temp)
     }  );
     return temp;
