@@ -138,15 +138,13 @@ export const addTemp = (req,res,next) => {
     var docs = req.body.data;
 
     async.series([
-        function(callback){
-            docs.forEach(function(d){
-                    console.log("1");
-                    Room.findOne({'number':d.room},function (err,r){
-                        if(err) return console.error(err);
-                        createTemp(d.date,d.value,r,callback);
-                    });
-                });
-        },
+        docs.forEach(function(d){
+            console.log("1");
+            Room.findOne({'number':d.room},function (err,r) {
+                if (err) return console.error(err);
+                createTemp(d.date, d.value, r, callback);
+            });
+        }),
         function(callback){
             changeAverage(docs,callback);
         },function(callback){
