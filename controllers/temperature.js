@@ -137,51 +137,49 @@ export const addTemp = (req,res,next) => {
     //console.log(req.url,req.body.data.length, req.body.data);
     var docs = req.body.data;
 
-    docs.forEach(function(d){
-        console.log("1");
-        Room.findOne({'number':d.room},function (err,r){
-            if(err) return console.error(err);
-            createTemp(d.date,d.value,r,callback);
-        });
-    });
-
-    docs.forEach(function(d){
-        console.log("2");
-        Room.findOne({'number':d.room},function (err,r){
-            if(err) return console.error(err);
-            console.log(r.temperatures.length);
-            r.populate("temperatures","value -_id",function (err,room) {
-                var average = 0.0;
-                room.temperatures.forEach(function (t) {
-                    //console.log(t.value);
-                    average +=t.value;
+    async.series([
+        function(callback){
+            docs.forEach(function(d){
+                    console.log("1");
+                    Room.findOne({'number':d.room},function (err,r){
+                        if(err) return console.error(err);
+                        createTemp(d.date,d.value,r,callback);
+                    });
                 });
-                average = average/room.temperatures.length;
-                console.log(average);
-                r.temperatureAverage = average;
-                r.save();
-            });
-        });
-    });
-
-    console.log("finish");
-    res.end("yes");
- /*   async.series([
-        function(callback){
-
         },
         function(callback){
-
-        },
-        function(callback){
-
-        }
-    ]);*/
+            changeAverage(docs,callback);
+        },function(callback){
+            console.log("finish");
+            res.end("yes");
+        }]);
 
 
 
 
 };
+
+function changeAverage(docs,cb){
+    docs.forEach(function(d){
+        console.log("2");
+            Room.findOne({'number':d.room},function (err,r){
+                if(err) return console.error(err);
+                console.log(r.temperatures.length);
+                r.populate("temperatures","value -_id",function (err,room) {
+                    var average = 0.0;
+                    room.temperatures.forEach(function (t) {
+                            //console.log(t.value);
+                        average +=t.value;
+                    });
+                    average = average/room.temperatures.length;
+                    console.log(average);
+                    r.temperatureAverage = average;
+                    r.save();
+                });
+            });
+    });
+
+}
 
 function createTemp(date, temperature,room,cb){
     var tempDetail = {date:date,value: temperature,room:room};
