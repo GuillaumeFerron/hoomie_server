@@ -137,47 +137,41 @@ export const addTemp = (req,res,next) => {
     //console.log(req.url,req.body.data.length, req.body.data);
     var docs = req.body.data;
 
-    docs.forEach(function(d){
-        async.series([
-            function(callback){
-
+    async.series([
+        function(callback){
+            docs.forEach(function(d){
                 Room.findOne({'number':d.room},function (err,r){
                     if(err) return console.error(err);
-                    async.series([
-                        function(callback){
-                            console.log("first function", d.date);
-                            var newTemp = createTemp(d.date,d.value,r,callback);
-
-                        },
-                        function(callback){
-
-                            console.log("second function ", r.temperatures.length);
-                            r.populate("temperatures","value -_id",function (err,room) {
-                                var average = 0.0;
-                                room.temperatures.forEach(function (t) {
-                                    //console.log(t.value);
-                                    average +=t.value;
-                                });
-                                average = average/room.temperatures.length;
-                                console.log(average);
-                                r.temperatureAverage = average;
-                                r.save();
-                            });
-                        }
-                    ]);
-
+                    var newTemp = createTemp(d.date,d.value,r,callback);
                 });
-            },
-            function(callback){
-                Room.findOne({},function(err,r){
-                    console.log(r.temperatures);
-                })
-            }
-        ]);
+            });
+        },
+        function(callback){
+            docs.forEach(function(d){
+                Room.findOne({'number':d.room},function (err,r){
+                    if(err) return console.error(err);
+                    console.log(r.temperatures.length);
+                    r.populate("temperatures","value -_id",function (err,room) {
+                        var average = 0.0;
+                        room.temperatures.forEach(function (t) {
+                            //console.log(t.value);
+                            average +=t.value;
+                        });
+                        average = average/room.temperatures.length;
+                        console.log(average);
+                        r.temperatureAverage = average;
+                        r.save();
+                    });
+                });
+            });
+        },
+        function(callback){
+            console.log("finish");
+            res.end("yes");
+        }
+    ]);
 
-    });
-    console.log("finish");
-    res.end("yes");
+
 
 
 };
