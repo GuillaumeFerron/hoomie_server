@@ -143,8 +143,7 @@ export const addTemp = (req,res,next) => {
             async.series([
                 function(callback){
                     var newTemp = createTemp(d.date,d.value,r,callback);
-                    r.temperatures.push(newTemp);
-                    console.log(r.temperatures);
+
                 },
                 function(callback){
                     r.populate("temperatures","value -_id",function (err,room) {
@@ -180,8 +179,10 @@ function createTemp(date, temperature,room,cb){
             cb(err, null)
             return
         }
-        console.log('New Temp: ' + temp);
-        //room.temperatures.push(temp);
+        console.log('New Temp: added');
+        room.temperatures.push(temp);
+        room.save();
+        console.log(room.temperatures);
         temps.push(temp)
         cb(null, temp)
     }  );
