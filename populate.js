@@ -221,25 +221,61 @@ function createTemperatures3(cb) {
         cb);
 }
 
+
+function createRooms(cb){
+    async.parallel([
+        function(callback){
+            createRoom(205, temps, callback);
+        },
+        function(callback){
+            createRoom(204, temps2, callback);
+        }
+
+    ]);
+}
+function createCredentials(cb){
+    async.parallel([
+        function(callback){
+            credentialCreate("ewilys","moi",false,callback);
+        },
+        function(callback){
+            credentialCreate("jojo","sis1",false,callback);
+        }
+
+    ]);
+
+
+
+}
+
+function createUsers(cb){
+    async.parallel([
+        function(callback){
+            userCreate("Lisa","MARTINI","1994-05-12",rooms[0],credential[0],callback);
+
+        },
+        function(callback){
+            userCreate("Johanna","MARTINI","1989-10-05",rooms[1],credential[1],callback);
+        }
+
+    ]);
+}
 async.series([
         createTemperatures,
         createTemperatures2,
         //createTemperatures3,
         function(callback) {
-            createRoom(205, temps, callback);
-            createRoom(204,temps2,callback);
+            createRooms(callback);
            // createRoom(203,temps3,callback);
         },
         function(callback) {
-            credentialCreate("ewilys","moi",false,callback);
-            credentialCreate("jojo","sis1",false,callback);
+            createCredentials(callback);
             /*credentialCreate("emma","sis2",false,callback);
             credentialCreate("fefe","guigui",false,callback);
             credentialCreate("gout","matmat",false,callback);*/
         },
         function(callback) {
-            userCreate("Lisa","MARTINI","1994-05-12",rooms[0],credential[0],callback);
-            userCreate("Johanna","MARTINI","1989-10-05",rooms[1],credential[1],callback);
+            createUsers(callback);
            /* userCreate("Emma","MARTINI","2001-04-21",rooms[1],credential[2],callback);
             userCreate("Guillaume","Ferron","1995-08-18",rooms[2],credential[3],callback);
             userCreate("Mathieu","GOUTAY","1995-04-25",rooms[2],credential[4],callback);*/
