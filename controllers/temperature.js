@@ -127,17 +127,21 @@ function computeAverage(temperatures,date,period ){
             }
         }
     });
-    //console.log(goodTemp);
-    goodTemp.forEach(function(v,c,map){
+
+    return  computeMapAverage(goodTemp) ;
+}
+
+function computeMapAverage(map){
+    var result =[];
+    map.forEach(function(v,c,m){
         var av =0.0;
         for(var i=0;i<v.length;i++){
             av += v[i];
         }
         av = av /v.length;
-        averageTemp.push({'date':c,'value':av});
+        result.push({'date':c,'value':av});
     });
-    //console.log(averageTemp);
-    return  averageTemp ;
+    return result;
 }
 //Average per month for one room
 export const averageMonth = (req,res,next) => {
@@ -190,43 +194,25 @@ export const averageYear = (req,res,next) => {
         let result = [];
         Room.find({},function(err,rooms){
             if (err) res.json({"error": err});
-            async.series([
-                function(callback){
-                    rooms.forEach(function(r){
-                        Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
-                            var averageTemp = computeAverage(temperatures,1,year);
-                            //console.log(averageTemp);
-                            averageTemp.forEach(function(index){
-                                console.log(index,index['date'],index['value']);
-                                if(goodTemp.has(index['date'])){
-                                    var val = goodTemp.get(index['date']);
-                                    val.push(index['value']);
-                                    goodTemp.set(index['date'],val);
-                                }else{
-                                    goodTemp.set(index['date'],[index['value']]);
-                                }
-                            });
-                            console.log("gt",goodTemp);
-                        });
-                    });
+            rooms.forEach(function(r){
+                 Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
+                      var averageTemp = computeAverage(temperatures,1,year);
+                      //console.log(averageTemp);
+                      averageTemp.forEach(function(index){
+                           console.log(index,index['date'],index['value']);
+                           if(goodTemp.has(index['date'])){
+                                var val = goodTemp.get(index['date']);
+                                val.push(index['value']);
+                                goodTemp.set(index['date'],val);
+                           }else{
 
-                    callback();
-                },
-                function(callback){
-                    console.log("gt",goodTemp);
-                    goodTemp.forEach(function(v,c,map){
-                        var av =0.0;
-                        for(var i=0;i<v.length;i++){
-                            av += v[i];
-                        }
-                        av = av /v.length;
-                        result.push({'date':c,'value':av});
-                    });
-                    console.log("res",result);
-                    res.json({data:result});
-                }
-            ]);
-
+                                goodTemp.set(index['date'],[index['value']]);
+                           }
+                      });
+                     //console.log("gt",goodTemp);
+                     res.json({data:computeMapAverage(goodTemp)});
+                 });
+            });
 
         });
 
