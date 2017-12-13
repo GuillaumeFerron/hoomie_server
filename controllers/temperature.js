@@ -120,8 +120,9 @@ export const monthTemperature = (req, res, next) => {
                 if (verif) {
                     if(goodTemp.has(curr[2])){
                         var val = goodTemp.get(curr[2]);
+                        val.push(t.value);
                         console.log(val);
-                        goodTemp.set(curr[2],val.push(t.value));
+                        goodTemp.set(curr[2],val);
                     }else{
                         goodTemp.set(curr[2],[t.value]);
                     }
