@@ -133,6 +133,7 @@ function computeAverage(temperatures,date,period ){
 
 function computeMapAverage(map){
     var result =[];
+    console.log("map",map)
     map.forEach(function(v,c,m){
         var av =0.0;
         for(var i=0;i<v.length;i++){
@@ -141,6 +142,7 @@ function computeMapAverage(map){
         av = av /v.length;
         result.push({'date':c,'value':av});
     });
+    console.log(result);
     return result;
 }
 //Average per month for one room
