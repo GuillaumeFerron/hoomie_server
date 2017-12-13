@@ -204,6 +204,7 @@ export const averageYear = (req,res,next) => {
                             goodTemp.set(index['date'],[index['value']]);
                         }
                     });
+                    console.log("gt",goodTemp);
                 });
             });
             console.log("gt",goodTemp);
