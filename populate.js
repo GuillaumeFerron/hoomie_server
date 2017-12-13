@@ -48,10 +48,14 @@ function userCreate(first_name, family_name, d_birth,room,access, cb) {
         }
         console.log('New User: ' + user);
         users.push(user);
+        Room.update({'_id':room._id},{})
         room.inhabitants.push(user);
         room.save();
-        access.user_id = user;
-        access.save();
+        Credential.update({'_id':access._id},{'user_id':user},function(err,nbAff){
+            if(err) return console.error(err);
+            // console.log("nb doc modified :"+numberAffected);
+        })
+        
         cb(null, user)
     }  );
 }
