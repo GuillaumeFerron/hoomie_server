@@ -154,7 +154,7 @@ export const yearTemperature = (req, res, next) => {
                 let verif = true;
 
                 //Go through athe first two fields of date, hence the given month
-                if (parseInt(curr[j]) !== parseInt(period[j])) {
+                if (parseInt(curr[0]) !== parseInt(period[0])) {
                         verif = false;
                 }
                 if (verif) {
