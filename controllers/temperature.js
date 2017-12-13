@@ -190,34 +190,44 @@ export const averageYear = (req,res,next) => {
         let result = [];
         Room.find({},function(err,rooms){
             if (err) res.json({"error": err});
-            rooms.forEach(function(r){
-                Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
-                    var averageTemp = computeAverage(temperatures,1,year);
-                    //console.log(averageTemp);
-                    averageTemp.forEach(function(index){
-                        console.log(index,index['date'],index['value']);
-                        if(goodTemp.has(index['date'])){
-                            var val = goodTemp.get(index['date']);
-                            val.push(index['value']);
-                            goodTemp.set(index['date'],val);
-                        }else{
-                            goodTemp.set(index['date'],[index['value']]);
-                        }
+            async.series([
+                function(callback){
+                    rooms.forEach(function(r){
+                        Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
+                            var averageTemp = computeAverage(temperatures,1,year);
+                            //console.log(averageTemp);
+                            averageTemp.forEach(function(index){
+                                console.log(index,index['date'],index['value']);
+                                if(goodTemp.has(index['date'])){
+                                    var val = goodTemp.get(index['date']);
+                                    val.push(index['value']);
+                                    goodTemp.set(index['date'],val);
+                                }else{
+                                    goodTemp.set(index['date'],[index['value']]);
+                                }
+                            });
+                            console.log("gt",goodTemp);
+                        });
                     });
+
+                    callback();
+                },
+                function(callback){
                     console.log("gt",goodTemp);
-                });
-            });
-            console.log("gt",goodTemp);
-            goodTemp.forEach(function(v,c,map){
-                var av =0.0;
-                for(var i=0;i<v.length;i++){
-                    av += v[i];
+                    goodTemp.forEach(function(v,c,map){
+                        var av =0.0;
+                        for(var i=0;i<v.length;i++){
+                            av += v[i];
+                        }
+                        av = av /v.length;
+                        result.push({'date':c,'value':av});
+                    });
+                    console.log("res",result);
+                    res.json({data:result});
                 }
-                av = av /v.length;
-                result.push({'date':c,'value':av});
-            });
-            console.log("res",result);
-            res.json({data:result});
+            ]);
+
+
         });
 
     }else{
