@@ -144,7 +144,7 @@ export const addTemp = (req,res,next) => {
                 function (callback) {
                     createTemp(d.date, d.value, r, callback);
                 },
-                function (callback) {
+                /*function (callback) {
                     r.populate("temperatures", "value -_id", function (err, room) {
                         var average = 0.0;
                         room.temperatures.forEach(function (t) {
@@ -157,7 +157,7 @@ export const addTemp = (req,res,next) => {
                         r.save();
                     });
                     console.log(r);
-                }, function (callback) {
+                },*/ function (callback) {
                     console.log("finish");
                     res.end("yes");
                 }

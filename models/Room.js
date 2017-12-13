@@ -11,7 +11,6 @@ const roomSchema = new Schema({
     inhabitants : [{type: Schema.Types.ObjectId, ref:'User'}],
     number:{type:Number,required:true},
     temperatures: [{type:Schema.Types.ObjectId,ref:'Temperature'}],
-    temperatureAverage : {type:Number}
     //sound :[{type:Schema.Types.ObjectId,ref:'sound'}],
     //light :[{type:Schema.Types.ObjectId,ref:'light'}],
     //solar_light:[{type:Schema.Types.ObjectId,ref:'solar_light'}],
