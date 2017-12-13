@@ -141,7 +141,35 @@ export const averageMonth = (req,res,next) => {
     var room = req.params.room;
     var month = req.params.date;
     if(room == "all"){
+        let goodTemp = new Map();
+        let result = [];
+        Room.find({},function(err,rooms){
+            if (err) res.json({"error": err});
+            rooms.forEach(function(r){
+                Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
+                    var averageTemp = computeAverage(temperatures,2,month);
+                    averageTemp.forEach(function(index){
+                        if(goodTemp.has(index[date])){
+                            var val = goodTemp.get(index.date);
+                            val.push(index.value);
+                            goodTemp.set(index.date,val);
+                        }else{
+                            goodTemp.set(index.date,[index.value]);
+                        }
+                    });
+                });
+            });
+            goodTemp.forEach(function(v,c,map){
+                var av =0.0;
+                for(var i=0;i<v.length;i++){
+                    av += v[i];
+                }
+                av = av /v.length;
+                result.push({'date':c,'value':av});
+            });
 
+        });
+        res.json({data:result});
     }else{
         res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/month/'+month);
     }
@@ -152,10 +180,37 @@ export const averageMonth = (req,res,next) => {
 export const averageYear = (req,res,next) => {
     var room = req.params.room;
     var year = req.params.date;
+
     if(room == "all"){
-        Room.find({},function(err,r){
+        let goodTemp = new Map();
+        let result = [];
+        Room.find({},function(err,rooms){
             if (err) res.json({"error": err});
+            rooms.forEach(function(r){
+                Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
+                    var averageTemp = computeAverage(temperatures,1,year);
+                    averageTemp.forEach(function(index){
+                        if(goodTemp.has(index[date])){
+                            var val = goodTemp.get(index.date);
+                            val.push(index.value);
+                            goodTemp.set(index.date,val);
+                        }else{
+                            goodTemp.set(index.date,[index.value]);
+                        }
+                    });
+                });
+            });
+            goodTemp.forEach(function(v,c,map){
+                var av =0.0;
+                for(var i=0;i<v.length;i++){
+                    av += v[i];
+                }
+                av = av /v.length;
+                result.push({'date':c,'value':av});
+            });
+
         });
+        res.json({data:result});
     }else{
         res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/year/'+year);
     }
@@ -188,20 +243,7 @@ export const addTemp = (req,res,next) => {
 
 };
 
-/*function (callback) {
-                   r.populate("temperatures", "value -_id", function (err, room) {
-                       var average = 0.0;
-                       room.temperatures.forEach(function (t) {
-                           //console.log(t.value);
-                           average += t.value;
-                       });
-                       average = average / room.temperatures.length;
-                       console.log(average);
-                       r.temperatureAverage = average;
-                       r.save();
-                   });
-                   console.log(r);
-               },*/
+
 
 function createTemp(date, temperature,room,cb){
     var tempDetail = {date:date,value: temperature,room:room};
