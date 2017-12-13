@@ -195,7 +195,7 @@ export const averageYear = (req,res,next) => {
                     var averageTemp = computeAverage(temperatures,1,year);
                     console.log(averageTemp);
                     averageTemp.forEach(function(index){
-                        console.log("here");
+                        console.log(index[date],index.date,index[value],index.value);
                         if(goodTemp.has(index.date)){
                             var val = goodTemp.get(index.date);
                             val.push(index.value);
