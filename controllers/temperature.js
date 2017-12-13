@@ -64,19 +64,19 @@ export const periodTemperature = (req, res, next) => {
 
 //Specific day temperature
 export const dayTemperature = (req, res, next) => {
+    const period = req.params.date.split("-");
+
     Room.findOne({'number':req.params.room},function(err,r) {
         if (err) res.json({"error": err});
         Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
             let sortedTemp = [];
-            const period = req.params.date.split("-");
-
-            //Go through all temperatures in db
-            for (let i = 0; i < temperatures.length; i++) {
-                let curr = temperatures[i].date.split("-");
+            temperatures.forEach(function(t){
+                let curr = t.date.split("-");
                 let verif = true;
+
                 //Check that the two formats are correct
 
-                //Go through athe first three fields of date, hence the given day
+                //Go through the first three fields of date, hence the given day
                 for (let j = 0; j < 3; j++) {
                     //If the current field is lower than the one given as a url parameter, then it is anterior
                     if (parseInt(curr[j]) !== parseInt(period[j])) {
@@ -85,10 +85,12 @@ export const dayTemperature = (req, res, next) => {
                     }
                 }
                 if (verif) {
-                    sortedTemp.push(temperatures[i]);
+                    var data_to_send = {'value':t.value,'date':curr[3]+'-'+curr[4]}; //give the hour and the minutes
+                    console.log(data_to_send);
+                    sortedTemp.push(data_to_send);
                 }
+            });
 
-            }
             return res.json({data: sortedTemp}
             )
         });
@@ -97,17 +99,15 @@ export const dayTemperature = (req, res, next) => {
 
 //Specific month temperature
 export const monthTemperature = (req, res, next) => {
+    const period = req.params.date.split("-");
     Room.findOne({'number':req.params.room},function(err,r) {
         if (err) res.json({"error": err});
         Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
-            let sortedTemp = [];
-            const period = req.params.date.split("-");
-
-            //Go through all temperatures in db
-            for (let i = 0; i < temperatures.length; i++) {
-                let curr = temperatures[i].date.split("-");
+            let goodTemp = new Map();
+            let averageTemp = [];
+            temperatures.forEach(function(t){
+                let curr = t.date.split("-");
                 let verif = true;
-                //Check that the two formats are correct
 
                 //Go through athe first two fields of date, hence the given month
                 for (let j = 0; j < 2; j++) {
@@ -118,12 +118,23 @@ export const monthTemperature = (req, res, next) => {
                     }
                 }
                 if (verif) {
-                    sortedTemp.push(temperatures[i]);
+                    if(goodTemp.has(curr[3])){
+                        var val = goodTemp.get(curr[3]);
+                        goodTemp.set(curr[3],val.push(t.value));
+                    }else{
+                        goodTemp.set(curr[3],[t.value]);
+                    }
                 }
-
-            }
-            return res.json({data: sortedTemp}
-            )
+            });
+            goodTemp.forEach(function(v,c,map){
+                var av =0.0;
+                for(var i=0;i<v.length;i++){
+                    av += v[i];
+                }
+                av = av /v.length;
+                averageTemp.push({'date':c,'value':av});
+            });
+            return res.json({data: averageTemp});
         });
     });
 };
