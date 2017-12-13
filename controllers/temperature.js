@@ -193,15 +193,15 @@ export const averageYear = (req,res,next) => {
             rooms.forEach(function(r){
                 Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
                     var averageTemp = computeAverage(temperatures,1,year);
-                    console.log(averageTemp);
+                    //console.log(averageTemp);
                     averageTemp.forEach(function(index){
-                        console.log(index[date],index.date,index[value],index.value);
-                        if(goodTemp.has(index.date)){
-                            var val = goodTemp.get(index.date);
-                            val.push(index.value);
-                            goodTemp.set(index.date,val);
+                        console.log(index,index['date'],index['value']);
+                        if(goodTemp.has(index['date'])){
+                            var val = goodTemp.get(index['date']);
+                            val.push(index['value']);
+                            goodTemp.set(index['date'],val);
                         }else{
-                            goodTemp.set(index.date,[index.value]);
+                            goodTemp.set(index['date'],[index['value']]);
                         }
                     });
                 });
