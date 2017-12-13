@@ -211,11 +211,9 @@ export const averageYear = (req,res,next) => {
                                 goodTemp.set(index['date'],[index['value']]);
                            }
                       });
-                     //console.log("gt",goodTemp);
-                     res.json({data:computeMapAverage(goodTemp)});
                  });
             });
-
+            res.json({data:computeMapAverage(goodTemp)});
         });
 
     }else{
