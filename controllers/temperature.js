@@ -195,6 +195,7 @@ export const averageYear = (req,res,next) => {
                     var averageTemp = computeAverage(temperatures,1,year);
                     console.log(averageTemp);
                     averageTemp.forEach(function(index){
+                        console.log("here");
                         if(goodTemp.has(index.date)){
                             var val = goodTemp.get(index.date);
                             val.push(index.value);
@@ -205,6 +206,7 @@ export const averageYear = (req,res,next) => {
                     });
                 });
             });
+            console.log("gt",goodTemp);
             goodTemp.forEach(function(v,c,map){
                 var av =0.0;
                 for(var i=0;i<v.length;i++){
@@ -213,10 +215,10 @@ export const averageYear = (req,res,next) => {
                 av = av /v.length;
                 result.push({'date':c,'value':av});
             });
-            console.log(result);
-
+            console.log("res",result);
+            res.json({data:result});
         });
-        res.json({data:result});
+
     }else{
         res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/year/'+year);
     }
