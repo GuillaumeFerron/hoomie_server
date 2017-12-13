@@ -104,6 +104,7 @@ export const yearTemperature = (req, res, next) => {
 function computeAverage(temperatures,date,period ){
     let goodTemp = new Map();
     let averageTemp = [];
+    console.log(temperatures);
     temperatures.forEach(function(t){
         let curr = t.date.split("-");
         let verif = true;
@@ -126,6 +127,7 @@ function computeAverage(temperatures,date,period ){
             }
         }
     });
+    console.log(goodTemp);
     goodTemp.forEach(function(v,c,map){
         var av =0.0;
         for(var i=0;i<v.length;i++){
@@ -134,6 +136,7 @@ function computeAverage(temperatures,date,period ){
         av = av /v.length;
         averageTemp.push({'date':c,'value':av});
     });
+    console.log(averageTemp);
     return  averageTemp ;
 }
 //Average per month for one room
@@ -172,7 +175,7 @@ export const averageMonth = (req,res,next) => {
         });
         res.json({data:result});
     }else{
-        res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/month/'+month);
+        res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/month/'+req.params.date);
     }
 };
 
