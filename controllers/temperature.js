@@ -154,16 +154,25 @@ export const yearTemperature = (req, res, next) => {
 
 //Average per month for one room
 export const averageMonth = (req,res,next) => {
-   /* var room = req.params.room;
+    var room = req.params.room;
+    var month = req.params.date;
     if(room == "all"){
-        Room.
-    }*/
+
+    }else{
+        res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/month:/'+month);
+    }
 };
 
 
 //Average per year for one room
 export const averageYear = (req,res,next) => {
+    var room = req.params.room;
+    var year = req.params.date;
+    if(room == "all"){
 
+    }else{
+        res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/month:/'+year);
+    }
 };
 
 //Post function
@@ -181,20 +190,7 @@ export const addTemp = (req,res,next) => {
                 function (callback) {
                     createTemp(d.date, d.value, r, callback);
                 }
-                /*function (callback) {
-                    r.populate("temperatures", "value -_id", function (err, room) {
-                        var average = 0.0;
-                        room.temperatures.forEach(function (t) {
-                            //console.log(t.value);
-                            average += t.value;
-                        });
-                        average = average / room.temperatures.length;
-                        console.log(average);
-                        r.temperatureAverage = average;
-                        r.save();
-                    });
-                    console.log(r);
-                },*/
+
             ],
             function (err,results) {
                 console.log("finish");
@@ -206,7 +202,20 @@ export const addTemp = (req,res,next) => {
 
 };
 
-
+/*function (callback) {
+                   r.populate("temperatures", "value -_id", function (err, room) {
+                       var average = 0.0;
+                       room.temperatures.forEach(function (t) {
+                           //console.log(t.value);
+                           average += t.value;
+                       });
+                       average = average / room.temperatures.length;
+                       console.log(average);
+                       r.temperatureAverage = average;
+                       r.save();
+                   });
+                   console.log(r);
+               },*/
 
 function createTemp(date, temperature,room,cb){
     var tempDetail = {date:date,value: temperature,room:room};
