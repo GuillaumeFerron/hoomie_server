@@ -71,7 +71,7 @@ export const dayTemperature = (req, res, next) => {
         if (err) res.json({"error": err});
         Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
             var averageTemp = computeAverage(temperatures,3,period);
-            return res.json({data: sortedTemp}
+            return res.json({data: averageTemp}
             )
         });
     });
