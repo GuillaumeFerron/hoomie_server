@@ -110,7 +110,7 @@ function createRoom(number, temperatures,cb){
 
 }
 
-function createTemp(date, temperature, cb){
+function createTemp(date, temperature,tempArray, cb){
     var tempDetail = {date:date,value: temperature};
 
     var temp = new Temperature(tempDetail);
@@ -121,7 +121,7 @@ function createTemp(date, temperature, cb){
             return
         }
         console.log('New Temp: ' + temp);
-        temps.push(temp)
+        tempArray.push(temp)
         cb(null, temp)
     }  );
 
@@ -131,28 +131,28 @@ function createTemp(date, temperature, cb){
 function createTemperatures(cb) {
     async.parallel([
             function(callback) {
-                createTemp("2017-10-16-21-05-37", '20.10',callback);
+                createTemp("2017-10-16-21-05-37", '20.10',temps,callback);
             },
             function(callback) {
-                createTemp("2017-10-16-23-05-45", '22.65',callback);
+                createTemp("2017-10-16-23-05-45", '22.65',temps,callback);
             },
             function(callback) {
-                createTemp("2017-10-17-08-06-05", '23.45',callback);
+                createTemp("2017-10-17-08-06-05", '23.45',temps,callback);
             },
             function(callback) {
-                createTemp("2017-10-17-15-05-55", '22.50',callback);
+                createTemp("2017-10-17-15-05-55", '22.50',temps,callback);
             },
             function(callback) {
-                createTemp("2017-10-18-21-06-00",'20.59',callback);
+                createTemp("2017-10-18-21-06-00",'20.59',temps,callback);
             },
             function(callback) {
-                createTemp("2017-11-05-04-05-50", '24.11',callback);
+                createTemp("2017-11-05-04-05-50", '24.11',temps,callback);
             },
             function(callback) {
-                createTemp("2017-11-19-20-44-55", '24.60',callback);
+                createTemp("2017-11-19-20-44-55", '24.60',temps,callback);
             },
             function(callback) {
-                createTemp("2017-11-25-12-05-50", '25.78',callback);
+                createTemp("2017-11-25-12-05-50", '25.78',temps,callback);
             },
         ],
         // optional callback
@@ -162,28 +162,28 @@ function createTemperatures(cb) {
 function createTemperatures2(cb) {
     async.parallel([
             function(callback) {
-                createTemp("2017-10-15-21-05-37", '21.10',callback);
+                createTemp("2017-10-15-21-05-37", '21.10',temps2,callback);
             },
             function(callback) {
-                createTemp("2017-10-16-23-05-45", '20.65',callback);
+                createTemp("2017-10-16-23-05-45", '20.65',temps2,callback);
             },
             function(callback) {
-                createTemp("2017-10-17-08-06-05", '21.45',callback);
+                createTemp("2017-10-17-08-06-05", '21.45',temps2,callback);
             },
             function(callback) {
-                createTemp("2017-11-17-15-05-55", '22.50',callback);
+                createTemp("2017-11-17-15-05-55", '22.50',temps2,callback);
             },
             function(callback) {
-                createTemp("2017-11-18-21-06-00",'19.59',callback);
+                createTemp("2017-11-18-21-06-00",'19.59',temps2,callback);
             },
             function(callback) {
-                createTemp("2017-11-05-04-05-50", '20.11',callback);
+                createTemp("2017-11-05-04-05-50", '20.11',temps2,callback);
             },
             function(callback) {
-                createTemp("2017-12-19-20-44-55", '23.60',callback);
+                createTemp("2017-12-19-20-44-55", '23.60',temps2,callback);
             },
             function(callback) {
-                createTemp("2017-12-25-12-05-50", '20.78',callback);
+                createTemp("2017-12-25-12-05-50", '20.78',temps2,callback);
             },
         ],
         // optional callback
@@ -287,10 +287,7 @@ async.series([
         if (err) {
             console.log('FINAL ERR: '+err);
         }
-        else {
-
-
-        }
+        
         //All done, disconnect from database
         db.close();
     });
