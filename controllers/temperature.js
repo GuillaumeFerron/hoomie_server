@@ -104,7 +104,7 @@ export const yearTemperature = (req, res, next) => {
 function computeAverage(temperatures,date,period ){
     let goodTemp = new Map();
     let averageTemp = [];
-    console.log(temperatures, period);
+   // console.log(temperatures, period);
     temperatures.forEach(function(t){
         let curr = t.date.split("-");
         let verif = true;
@@ -127,7 +127,7 @@ function computeAverage(temperatures,date,period ){
             }
         }
     });
-    console.log(goodTemp);
+    //console.log(goodTemp);
     goodTemp.forEach(function(v,c,map){
         var av =0.0;
         for(var i=0;i<v.length;i++){
@@ -136,7 +136,7 @@ function computeAverage(temperatures,date,period ){
         av = av /v.length;
         averageTemp.push({'date':c,'value':av});
     });
-    console.log(averageTemp);
+    //console.log(averageTemp);
     return  averageTemp ;
 }
 //Average per month for one room
@@ -213,6 +213,7 @@ export const averageYear = (req,res,next) => {
                 av = av /v.length;
                 result.push({'date':c,'value':av});
             });
+            console.log(result);
 
         });
         res.json({data:result});
