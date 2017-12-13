@@ -9,129 +9,166 @@ import async from 'async';
 //GET fonction
 //All temperatures
 export const allTemperatures = (req, res, next) => {
-    Temperature.find({}, {}).exec((err, temperatures) => res.json(
-        { data: temperatures}
-    ));
+    Room.findOne({'number':req.params.room},function(err,r){
+        if(err) res.json({"error":err});
+        Temperature.find({'room':r}, {}).exec((err, temperatures) => res.json(
+            { data: temperatures}
+        ));
+
+    });
+
 };
 
 //Last Temperature
 export const lastTemperature = (req, res, next) => {
-    Temperature.find({}, {}).sort({_id:-1}).limit(1).exec((err, temperatures) => res.json(
-        { data: temperatures}
-    ));
+    Room.findOne({'number':req.params.room},function(err,r){
+        if(err) res.json({"error":err});
+        Temperature.find({'room':r}, {}).sort({_id:-1}).limit(1).exec((err, temperatures) => res.json(
+            { data: temperatures}
+        ));
+    });
 };
 
 //Temperatures ulterior to a given date
 export const periodTemperature = (req, res, next) => {
-    Temperature.find({}, {}).exec(function(err, temperatures) {
-        let sortedTemp = [];
-        const period = req.params.date.split("-");
+    Room.findOne({'number':req.params.room},function(err,r) {
+        if (err) res.json({"error": err});
+        Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
+            let sortedTemp = [];
+            const period = req.params.date.split("-");
 
-        //Go through all temperatures in db
-        for(let i = 0; i < temperatures.length; i++) {
-            let curr = temperatures[i].date.split("-");
-            let verif = true;
-            //Check that the two formats are correct
-            if(curr.length === period.length) {
-                //Go through all fields of date
-                for (let j = 0; j < curr.length; j++) {
-                    //If the current field is lower than the one given as a url parameter, then it is anterior
-                    if(parseInt(curr[j]) < parseInt(period[j])) {
-                        verif = false;
-                        break;
+            //Go through all temperatures in db
+            for (let i = 0; i < temperatures.length; i++) {
+                let curr = temperatures[i].date.split("-");
+                let verif = true;
+                //Check that the two formats are correct
+                if (curr.length === period.length) {
+                    //Go through all fields of date
+                    for (let j = 0; j < curr.length; j++) {
+                        //If the current field is lower than the one given as a url parameter, then it is anterior
+                        if (parseInt(curr[j]) < parseInt(period[j])) {
+                            verif = false;
+                            break;
+                        }
+                    }
+                    if (verif) {
+                        sortedTemp.push(temperatures[i]);
                     }
                 }
-                if(verif) {
-                    sortedTemp.push(temperatures[i]);
-                }
             }
-        }
-        return res.json({ data: sortedTemp}
-    )});
+            return res.json({data: sortedTemp}
+            )
+        });
+    });
 };
 
 //Specific day temperature
 export const dayTemperature = (req, res, next) => {
-    Temperature.find({}, {}).exec(function(err, temperatures) {
-        let sortedTemp = [];
-        const period = req.params.date.split("-");
+    Room.findOne({'number':req.params.room},function(err,r) {
+        if (err) res.json({"error": err});
+        Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
+            let sortedTemp = [];
+            const period = req.params.date.split("-");
 
-        //Go through all temperatures in db
-        for(let i = 0; i < temperatures.length; i++) {
-            let curr = temperatures[i].date.split("-");
-            let verif = true;
-            //Check that the two formats are correct
+            //Go through all temperatures in db
+            for (let i = 0; i < temperatures.length; i++) {
+                let curr = temperatures[i].date.split("-");
+                let verif = true;
+                //Check that the two formats are correct
 
                 //Go through athe first three fields of date, hence the given day
                 for (let j = 0; j < 3; j++) {
                     //If the current field is lower than the one given as a url parameter, then it is anterior
-                    if(parseInt(curr[j]) !== parseInt(period[j])) {
+                    if (parseInt(curr[j]) !== parseInt(period[j])) {
                         verif = false;
                         break;
                     }
                 }
-                if(verif) {
+                if (verif) {
                     sortedTemp.push(temperatures[i]);
                 }
 
-        }
-        return res.json({ data: sortedTemp}
-        )});
+            }
+            return res.json({data: sortedTemp}
+            )
+        });
+    });
 };
 
 //Specific month temperature
 export const monthTemperature = (req, res, next) => {
-    Temperature.find({}, {}).exec(function(err, temperatures) {
-        let sortedTemp = [];
-        const period = req.params.date.split("-");
+    Room.findOne({'number':req.params.room},function(err,r) {
+        if (err) res.json({"error": err});
+        Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
+            let sortedTemp = [];
+            const period = req.params.date.split("-");
 
-        //Go through all temperatures in db
-        for(let i = 0; i < temperatures.length; i++) {
-            let curr = temperatures[i].date.split("-");
-            let verif = true;
-            //Check that the two formats are correct
+            //Go through all temperatures in db
+            for (let i = 0; i < temperatures.length; i++) {
+                let curr = temperatures[i].date.split("-");
+                let verif = true;
+                //Check that the two formats are correct
 
                 //Go through athe first two fields of date, hence the given month
                 for (let j = 0; j < 2; j++) {
                     //If the current field is lower than the one given as a url parameter, then it is anterior
-                    if(parseInt(curr[j]) !== parseInt(period[j])) {
+                    if (parseInt(curr[j]) !== parseInt(period[j])) {
                         verif = false;
                         break;
                     }
                 }
-                if(verif) {
+                if (verif) {
                     sortedTemp.push(temperatures[i]);
                 }
 
-        }
-        return res.json({ data: sortedTemp}
-        )});
+            }
+            return res.json({data: sortedTemp}
+            )
+        });
+    });
 };
 
 //Specific year temperature
 export const yearTemperature = (req, res, next) => {
-    Temperature.find({}, {}).exec(function(err, temperatures) {
-        let sortedTemp = [];
-        const period = req.params.date.split("-");
+    Room.findOne({'number':req.params.room},function(err,r) {
+        if (err) res.json({"error": err});
+        Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
+            let sortedTemp = [];
+            const period = req.params.date.split("-");
 
-        //Go through all temperatures in db
-        for(let i = 0; i < temperatures.length; i++) {
-            let curr = temperatures[i].date.split("-");
-            //Check that the two formats are correct
+            //Go through all temperatures in db
+            for (let i = 0; i < temperatures.length; i++) {
+                let curr = temperatures[i].date.split("-");
+                //Check that the two formats are correct
 
-            if(parseInt(curr[0]) === parseInt(period[0])) {
-                sortedTemp.push(temperatures[i]);
+                if (parseInt(curr[0]) === parseInt(period[0])) {
+                    sortedTemp.push(temperatures[i]);
+                }
+
             }
+            return res.json({data: sortedTemp}
+            )
+        });
+    });
+};
 
-        }
-        return res.json({ data: sortedTemp}
-        )});
+//Average per month for one room
+export const averageMonth = (req,res,next) => {
+   /* var room = req.params.room;
+    if(room == "all"){
+        Room.
+    }*/
 };
 
 
+//Average per year for one room
+export const averageYear = (req,res,next) => {
+
+};
+
 //Post function
 //addDoc
-var temps=[];
+
 
 export const addTemp = (req,res,next) => {
     //console.log(req.url,req.body.data.length, req.body.data);
@@ -143,7 +180,7 @@ export const addTemp = (req,res,next) => {
             async.series([
                 function (callback) {
                     createTemp(d.date, d.value, r, callback);
-                },
+                }
                 /*function (callback) {
                     r.populate("temperatures", "value -_id", function (err, room) {
                         var average = 0.0;
@@ -157,11 +194,12 @@ export const addTemp = (req,res,next) => {
                         r.save();
                     });
                     console.log(r);
-                },*/ function (callback) {
-                    console.log("finish");
-                    res.end("yes");
-                }
-            ]);
+                },*/
+            ],
+            function (err,results) {
+                console.log("finish");
+                res.end("yes");
+            });
         });
     });
 
@@ -186,7 +224,5 @@ function createTemp(date, temperature,room,cb){
 
         cb(null, temp)
     }  );
-
-
 
 }

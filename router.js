@@ -12,22 +12,28 @@ const router = Router();
 
 //GET Temp routes
 //All temperatures
-router.route('/temperature/all').get(TempController.allTemperatures);
+router.route('/:room/temperature/all').get(TempController.allTemperatures);
 
 //Last Temperature
-router.route('/temperature/last').get(TempController.lastTemperature);
+router.route('/:room/temperature/last').get(TempController.lastTemperature);
 
 //Temperatures ulterior to a given date
-router.route('/temperature/period/:date').get(TempController.periodTemperature);
+router.route('/:room/temperature/period/:date').get(TempController.periodTemperature);
 
 //Specific day temperature
-router.route('/temperature/day/:date').get(TempController.dayTemperature);
+router.route('/:room/temperature/day/:date').get(TempController.dayTemperature);
 
 //Specific month temperature
-router.route('/temperature/month/:date').get(TempController.monthTemperature);
+router.route('/:room/temperature/month/:date').get(TempController.monthTemperature);
 
 //Specific year temperature
-router.route('/temperature/year/:date').get(TempController.yearTemperature);
+router.route('/:room/temperature/year/:date').get(TempController.yearTemperature);
+
+//Average per month for one room
+router.route('/admin/temperature/month/:room').get(TempController.averageMonth);
+//Average per year for one room
+router.route('/admin/temperature/year/:room').get(TempController.averageYear);
+
 
 
 //POST Temp Routes
