@@ -118,11 +118,11 @@ export const monthTemperature = (req, res, next) => {
                     }
                 }
                 if (verif) {
-                    if(goodTemp.has(curr[3])){
-                        var val = goodTemp.get(curr[3]);
-                        goodTemp.set(curr[3],val.push(t.value));
+                    if(goodTemp.has(curr[2])){
+                        var val = goodTemp.get(curr[2]);
+                        goodTemp.set(curr[2],val.push(t.value));
                     }else{
-                        goodTemp.set(curr[3],[t.value]);
+                        goodTemp.set(curr[2],[t.value]);
                     }
                 }
             });
