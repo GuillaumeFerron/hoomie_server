@@ -149,7 +149,7 @@ export const averageMonth = (req,res,next) => {
                 Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
                     var averageTemp = computeAverage(temperatures,2,month);
                     averageTemp.forEach(function(index){
-                        if(goodTemp.has(index[date])){
+                        if(goodTemp.has(index.date)){
                             var val = goodTemp.get(index.date);
                             val.push(index.value);
                             goodTemp.set(index.date,val);
@@ -189,8 +189,9 @@ export const averageYear = (req,res,next) => {
             rooms.forEach(function(r){
                 Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
                     var averageTemp = computeAverage(temperatures,1,year);
+                    console.log(averageTemp);
                     averageTemp.forEach(function(index){
-                        if(goodTemp.has(index[date])){
+                        if(goodTemp.has(index.date)){
                             var val = goodTemp.get(index.date);
                             val.push(index.value);
                             goodTemp.set(index.date,val);
