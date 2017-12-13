@@ -126,6 +126,7 @@ export const monthTemperature = (req, res, next) => {
                     }
                 }
             });
+            console.log(goodTemp);
             goodTemp.forEach(function(v,c,map){
                 var av =0.0;
                 for(var i=0;i<v.length;i++){
