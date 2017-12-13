@@ -150,36 +150,10 @@ export const averageMonth = (req,res,next) => {
     var room = req.params.room;
     var month = req.params.date.split("-");
     if(room == "all"){
-        let goodTemp = new Map();
-        let result = [];
-        Room.find({},function(err,rooms){
-            if (err) res.json({"error": err});
-            rooms.forEach(function(r){
-
-                Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
-                    var averageTemp = computeAverage(temperatures,2,month);
-                    averageTemp.forEach(function(index){
-                        if(goodTemp.has(index.date)){
-                            var val = goodTemp.get(index.date);
-                            val.push(index.value);
-                            goodTemp.set(index.date,val);
-                        }else{
-                            goodTemp.set(index.date,[index.value]);
-                        }
-                    });
-                });
-            });
-            goodTemp.forEach(function(v,c,map){
-                var av =0.0;
-                for(var i=0;i<v.length;i++){
-                    av += v[i];
-                }
-                av = av /v.length;
-                result.push({'date':c,'value':av});
-            });
-
+        Temperature.find({}, {}).exec(function (err, temperatures) {
+            var averageTemp = computeAverage(temperatures,2,month);
+            res.json({data:averageTemp});
         });
-        res.json({data:result});
     }else{
         res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/month/'+req.params.date);
     }
@@ -192,28 +166,9 @@ export const averageYear = (req,res,next) => {
     var year = req.params.date.split("-");
 
     if(room == "all"){
-        let goodTemp = new Map();
-        let result = [];
-        Room.find({},function(err,rooms){
-            if (err) res.json({"error": err});
-            rooms.forEach(function(r){
-                 Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
-                      var averageTemp = computeAverage(temperatures,1,year);
-                      //console.log(averageTemp);
-                      averageTemp.forEach(function(index){
-                           console.log(index,index['date'],index['value']);
-                           if(goodTemp.has(index['date'])){
-                                var val = goodTemp.get(index['date']);
-                                val.push(index['value']);
-                                goodTemp.set(index['date'],val);
-                           }else{
-
-                                goodTemp.set(index['date'],[index['value']]);
-                           }
-                      });
-                 });
-            });
-            res.json({data:computeMapAverage(goodTemp)});
+        Temperature.find({}, {}).exec(function (err, temperatures) {
+            var averageTemp = computeAverage(temperatures,1,year);
+            res.json({data:averageTemp});
         });
 
     }else{
