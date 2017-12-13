@@ -70,28 +70,7 @@ export const dayTemperature = (req, res, next) => {
     Room.findOne({'number':req.params.room},function(err,r) {
         if (err) res.json({"error": err});
         Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
-            let sortedTemp = [];
-            temperatures.forEach(function(t){
-                let curr = t.date.split("-");
-                let verif = true;
-
-                //Check that the two formats are correct
-
-                //Go through the first three fields of date, hence the given day
-                for (let j = 0; j < 3; j++) {
-                    //If the current field is lower than the one given as a url parameter, then it is anterior
-                    if (parseInt(curr[j]) !== parseInt(period[j])) {
-                        verif = false;
-                        break;
-                    }
-                }
-                if (verif) {
-                    var data_to_send = {'value':t.value,'date':curr[3]+'-'+curr[4]}; //give the hour and the minutes
-                    console.log(data_to_send);
-                    sortedTemp.push(data_to_send);
-                }
-            });
-
+            var averageTemp = computeAverage(temperatures,3,period);
             return res.json({data: sortedTemp}
             )
         });
@@ -104,38 +83,7 @@ export const monthTemperature = (req, res, next) => {
     Room.findOne({'number':req.params.room},function(err,r) {
         if (err) res.json({"error": err});
         Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
-            let goodTemp = new Map();
-            let averageTemp = [];
-            temperatures.forEach(function(t){
-                let curr = t.date.split("-");
-                let verif = true;
-
-                //Go through athe first two fields of date, hence the given month
-                for (let j = 0; j < 2; j++) {
-                    //If the current field is lower than the one given as a url parameter, then it is anterior
-                    if (parseInt(curr[j]) !== parseInt(period[j])) {
-                        verif = false;
-                        break;
-                    }
-                }
-                if (verif) {
-                    if(goodTemp.has(curr[2])){
-                        var val = goodTemp.get(curr[2]);
-                        val.push(t.value);
-                        goodTemp.set(curr[2],val);
-                    }else{
-                        goodTemp.set(curr[2],[t.value]);
-                    }
-                }
-            });
-            goodTemp.forEach(function(v,c,map){
-                var av =0.0;
-                for(var i=0;i<v.length;i++){
-                    av += v[i];
-                }
-                av = av /v.length;
-                averageTemp.push({'date':c,'value':av});
-            });
+            var averageTemp = computeAverage(temperatures,2,period);
             return res.json({data: averageTemp});
         });
     });
@@ -147,39 +95,47 @@ export const yearTemperature = (req, res, next) => {
     Room.findOne({'number':req.params.room},function(err,r) {
         if (err) res.json({"error": err});
         Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
-            let goodTemp = new Map();
-            let averageTemp = [];
-            temperatures.forEach(function(t){
-                let curr = t.date.split("-");
-                let verif = true;
-
-                //Go through athe first two fields of date, hence the given month
-                if (parseInt(curr[0]) !== parseInt(period[0])) {
-                        verif = false;
-                }
-                if (verif) {
-                    if(goodTemp.has(curr[1])){
-                        var val = goodTemp.get(curr[1]);
-                        val.push(t.value);
-                        goodTemp.set(curr[1],val);
-                    }else{
-                        goodTemp.set(curr[1],[t.value]);
-                    }
-                }
-            });
-            goodTemp.forEach(function(v,c,map){
-                var av =0.0;
-                for(var i=0;i<v.length;i++){
-                    av += v[i];
-                }
-                av = av /v.length;
-                averageTemp.push({'date':c,'value':av});
-            });
+            var averageTemp = computeAverage(temperatures,1,period);
             return res.json({data: averageTemp});
         });
     });
 };
 
+function computeAverage(temperatures,date,period ){
+    let goodTemp = new Map();
+    let averageTemp = [];
+    temperatures.forEach(function(t){
+        let curr = t.date.split("-");
+        let verif = true;
+
+        //Go through athe first two fields of date, hence the given month
+        for (let j = 0; j < date; j++) {
+            //If the current field is lower than the one given as a url parameter, then it is anterior
+            if (parseInt(curr[j]) !== parseInt(period[j])) {
+                verif = false;
+                break;
+            }
+        }
+        if (verif) {
+            if(goodTemp.has(curr[date])){
+                var val = goodTemp.get(curr[date]);
+                val.push(t.value);
+                goodTemp.set(curr[date],val);
+            }else{
+                goodTemp.set(curr[date],[t.value]);
+            }
+        }
+    });
+    goodTemp.forEach(function(v,c,map){
+        var av =0.0;
+        for(var i=0;i<v.length;i++){
+            av += v[i];
+        }
+        av = av /v.length;
+        averageTemp.push({'date':c,'value':av});
+    });
+    return  averageTemp ;
+}
 //Average per month for one room
 export const averageMonth = (req,res,next) => {
     var room = req.params.room;
@@ -197,7 +153,9 @@ export const averageYear = (req,res,next) => {
     var room = req.params.room;
     var year = req.params.date;
     if(room == "all"){
-
+        Room.find({},function(err,r){
+            if (err) res.json({"error": err});
+        });
     }else{
         res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/year/'+year);
     }
