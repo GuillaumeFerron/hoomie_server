@@ -110,7 +110,7 @@ function createRoom(number, temperatures,cb){
 
 }
 
-function createTemp(date, temperature,tempArray, cb){
+function createTemp(date, temperature,tempArray,cb){
     var tempDetail = {date:date,value: temperature};
 
     var temp = new Temperature(tempDetail);
@@ -129,96 +129,63 @@ function createTemp(date, temperature,tempArray, cb){
 
 
 function createTemperatures(cb) {
-    async.parallel([
-            function(callback) {
-                createTemp("2017-10-16-21-05-37", '20.10',temps,callback);
-            },
-            function(callback) {
-                createTemp("2017-10-16-23-05-45", '22.65',temps,callback);
-            },
-            function(callback) {
-                createTemp("2017-10-17-08-06-05", '23.45',temps,callback);
-            },
-            function(callback) {
-                createTemp("2017-10-17-15-05-55", '22.50',temps,callback);
-            },
-            function(callback) {
-                createTemp("2017-10-18-21-06-00",'20.59',temps,callback);
-            },
-            function(callback) {
-                createTemp("2017-11-05-04-05-50", '24.11',temps,callback);
-            },
-            function(callback) {
-                createTemp("2017-11-19-20-44-55", '24.60',temps,callback);
-            },
-            function(callback) {
-                createTemp("2017-11-25-12-05-50", '25.78',temps,callback);
-            },
-        ],
-        // optional callback
-        cb);
+    var dates = [];
+    for(var m=8;m<13;m++){
+        if(m<10)m="0"+m;
+        for(var d=16;d<25;d++){
+            if(d<10)d="0"+d;
+            for(var h=10;h<15;h++) {
+                if (h < 10) h = "0" + h;
+                var val = Math.random() * (26.50 - 20.00) + 20.00;
+                    dates.push({m:m,d:d,h:h,val:val});
+            }
+        }
+    }
+
+    async.forEach(dates,function(date,callback){
+        createTemp("2017-" + date['m'] + "-" + date['d'] + "-" + date['h'] + "-00-00", date['val'], temps,callback);
+    },cb)
+
 }
 
+
+
 function createTemperatures2(cb) {
-    async.parallel([
-            function(callback) {
-                createTemp("2017-10-15-21-05-37", '21.10',temps2,callback);
-            },
-            function(callback) {
-                createTemp("2017-10-16-23-05-45", '20.65',temps2,callback);
-            },
-            function(callback) {
-                createTemp("2017-10-17-08-06-05", '21.45',temps2,callback);
-            },
-            function(callback) {
-                createTemp("2017-11-17-15-05-55", '22.50',temps2,callback);
-            },
-            function(callback) {
-                createTemp("2017-11-18-21-06-00",'19.59',temps2,callback);
-            },
-            function(callback) {
-                createTemp("2017-11-05-04-05-50", '20.11',temps2,callback);
-            },
-            function(callback) {
-                createTemp("2017-12-19-20-44-55", '23.60',temps2,callback);
-            },
-            function(callback) {
-                createTemp("2017-12-25-12-05-50", '20.78',temps2,callback);
-            },
-        ],
-        // optional callback
-        cb);
+    var dates = [];
+    for(var m=8;m<13;m++){
+        if(m<10)m="0"+m;
+        for(var d=16;d<25;d++){
+            if(d<10)d="0"+d;
+            for(var h=10;h<15;h++) {
+                if (h < 10) h = "0" + h;
+                var val = Math.random() * (24.20 - 19.30) + 19.30;
+                dates.push({m:m,d:d,h:h,val:val});
+            }
+        }
+    }
+
+    async.forEach(dates,function(date,callback){
+        createTemp("2017-" + date['m'] + "-" + date['d'] + "-" + date['h'] + "-00-00", date['val'], temps2,callback);
+    },cb);
 }
 
 function createTemperatures3(cb) {
-    async.parallel([
-            function(callback) {
-                createTemp("2017-10-15-21-05-37", '25.10',temps3,callback);
-            },
-            function(callback) {
-                createTemp("2017-10-16-23-05-45", '26.65',temps3,callback);
-            },
-            function(callback) {
-                createTemp("2017-10-17-08-06-05", '23.45',temps3,callback);
-            },
-            function(callback) {
-                createTemp("2017-11-17-15-05-55", '24.50',temps3,callback);
-            },
-            function(callback) {
-                createTemp("2017-11-18-21-06-00",'25.59',temps3,callback);
-            },
-            function(callback) {
-                createTemp("2017-11-05-04-05-50", '24.11',temps3,callback);
-            },
-            function(callback) {
-                createTemp("2017-12-19-20-44-55", '27.60',temps3,callback);
-            },
-            function(callback) {
-                createTemp("2017-12-25-12-05-50", '25.78',temps3,callback);
-            },
-        ],
-        // optional callback
-        cb);
+    var dates = [];
+    for(var m=8;m<13;m++){
+        if(m<10)m="0"+m;
+        for(var d=16;d<25;d++){
+            if(d<10)d="0"+d;
+            for(var h=10;h<15;h++) {
+                if (h < 10) h = "0" + h;
+                var val = Math.random() * (22.80-18.50) + 18.50;
+                dates.push({m:m,d:d,h:h,val:val});
+            }
+        }
+    }
+
+    async.forEach(dates,function(date,callback){
+        createTemp("2017-" + date['m'] + "-" + date['d'] + "-" + date['h'] + "-00-00", date['val'], temps3,callback);
+    },cb)
 }
 
 
