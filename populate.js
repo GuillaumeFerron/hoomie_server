@@ -231,7 +231,7 @@ function createRooms(cb){
             createRoom(204, temps2, callback);
         }
 
-    ]);
+    ],cb);
 }
 function createCredentials(cb){
     async.parallel([
@@ -242,7 +242,7 @@ function createCredentials(cb){
             credentialCreate("jojo","sis1",false,callback);
         }
 
-    ]);
+    ],cb);
 
 
 
@@ -258,7 +258,7 @@ function createUsers(cb){
             userCreate("Johanna","MARTINI","1989-10-05",rooms[1],credential[1],callback);
         }
 
-    ]);
+    ],cb);
 }
 async.series([
         createTemperatures,
@@ -287,7 +287,7 @@ async.series([
         if (err) {
             console.log('FINAL ERR: '+err);
         }
-        
+
         //All done, disconnect from database
         db.close();
     });
