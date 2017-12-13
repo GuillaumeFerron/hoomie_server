@@ -30,9 +30,9 @@ router.route('/:room/temperature/month/:date').get(TempController.monthTemperatu
 router.route('/:room/temperature/year/:date').get(TempController.yearTemperature);
 
 //Average per month for one room
-router.route('/admin/temperature/month/:date/:room').get(TempController.averageMonth);
+router.route('/admin/temperature/averageMonth/:date/:room').get(TempController.averageMonth);
 //Average per year for one room
-router.route('/admin/temperature/year/:date/:room').get(TempController.averageYear);
+router.route('/admin/temperature/averageYear/:date/:room').get(TempController.averageYear);
 
 
 

@@ -159,7 +159,7 @@ export const averageMonth = (req,res,next) => {
     if(room == "all"){
 
     }else{
-        res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/month:/'+month);
+        res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/month/'+month);
     }
 };
 
@@ -171,7 +171,7 @@ export const averageYear = (req,res,next) => {
     if(room == "all"){
 
     }else{
-        res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/month:/'+year);
+        res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/year/'+year);
     }
 };
 
