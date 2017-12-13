@@ -46,16 +46,12 @@ function userCreate(first_name, family_name, d_birth,room,access, cb) {
             cb(err, null);
             return
         }
-        console.log('New User: ' + user);
+        console.log('New User: ' + user+'\n');
         users.push(user);
-        Room.update({'_id':room._id},{})
-        room.inhabitants.push(user);
+       /* room.inhabitants.push(user);
         room.save();
-        Credential.update({'_id':access._id},{'user_id':user},function(err,nbAff){
-            if(err) return console.error(err);
-            // console.log("nb doc modified :"+numberAffected);
-        })
-        
+        access.user_id = user;
+        access.save();*/
         cb(null, user)
     }  );
 }
@@ -71,7 +67,7 @@ function credentialCreate(login,pwd,admin, cb) {
 
             // Store hash (incl. algorithm, iterations, and salt)
             credentialDetail.password = hash;
-            console.log(credentialDetail.password);
+            //console.log(credentialDetail.password);
 
         });
     }
@@ -197,28 +193,28 @@ function createTemperatures2(cb) {
 function createTemperatures3(cb) {
     async.parallel([
             function(callback) {
-                createTemp("2017-10-15-21-05-37", '25.10',callback);
+                createTemp("2017-10-15-21-05-37", '25.10',temps3,callback);
             },
             function(callback) {
-                createTemp("2017-10-16-23-05-45", '26.65',callback);
+                createTemp("2017-10-16-23-05-45", '26.65',temps3,callback);
             },
             function(callback) {
-                createTemp("2017-10-17-08-06-05", '23.45',callback);
+                createTemp("2017-10-17-08-06-05", '23.45',temps3,callback);
             },
             function(callback) {
-                createTemp("2017-11-17-15-05-55", '24.50',callback);
+                createTemp("2017-11-17-15-05-55", '24.50',temps3,callback);
             },
             function(callback) {
-                createTemp("2017-11-18-21-06-00",'25.59',callback);
+                createTemp("2017-11-18-21-06-00",'25.59',temps3,callback);
             },
             function(callback) {
-                createTemp("2017-11-05-04-05-50", '24.11',callback);
+                createTemp("2017-11-05-04-05-50", '24.11',temps3,callback);
             },
             function(callback) {
-                createTemp("2017-12-19-20-44-55", '27.60',callback);
+                createTemp("2017-12-19-20-44-55", '27.60',temps3,callback);
             },
             function(callback) {
-                createTemp("2017-12-25-12-05-50", '25.78',callback);
+                createTemp("2017-12-25-12-05-50", '25.78',temps3,callback);
             },
         ],
         // optional callback
@@ -226,65 +222,65 @@ function createTemperatures3(cb) {
 }
 
 
-function createRooms(cb){
-    async.parallel([
+
+async.series([
+        createTemperatures,
+        createTemperatures2,
+        createTemperatures3,
         function(callback){
             createRoom(205, temps, callback);
         },
         function(callback){
             createRoom(204, temps2, callback);
-        }
-
-    ],cb);
-}
-function createCredentials(cb){
-    async.parallel([
+        },
+        function(callback){
+            createRoom(203,temps3,callback);
+        },
         function(callback){
             credentialCreate("ewilys","moi",false,callback);
         },
         function(callback){
             credentialCreate("jojo","sis1",false,callback);
-        }
+        },
+        function(callback){
+            credentialCreate("emma","sis2",false,callback);
 
-    ],cb);
-
-
-
-}
-
-function createUsers(cb){
-    async.parallel([
+        },
+        function(callback){
+            credentialCreate("fefe","guigui",false,callback);
+        },
+        function(callback){
+            credentialCreate("gout","matmat",false,callback);
+        },
         function(callback){
             userCreate("Lisa","MARTINI","1994-05-12",rooms[0],credential[0],callback);
-
         },
         function(callback){
             userCreate("Johanna","MARTINI","1989-10-05",rooms[1],credential[1],callback);
-        }
-
-    ],cb);
-}
-async.series([
-        createTemperatures,
-        createTemperatures2,
-        //createTemperatures3,
-        function(callback) {
-            createRooms(callback);
-           // createRoom(203,temps3,callback);
         },
-        function(callback) {
-            createCredentials(callback);
-            /*credentialCreate("emma","sis2",false,callback);
-            credentialCreate("fefe","guigui",false,callback);
-            credentialCreate("gout","matmat",false,callback);*/
+        function(callback){
+            userCreate("Emma","MARTINI","2001-04-21",rooms[1],credential[2],callback);
         },
-        function(callback) {
-            createUsers(callback);
-           /* userCreate("Emma","MARTINI","2001-04-21",rooms[1],credential[2],callback);
+        function(callback){
             userCreate("Guillaume","Ferron","1995-08-18",rooms[2],credential[3],callback);
-            userCreate("Mathieu","GOUTAY","1995-04-25",rooms[2],credential[4],callback);*/
+        },
+        function(callback){
+            userCreate("Mathieu","GOUTAY","1995-04-25",rooms[2],credential[4],callback);
+        },
+        function(callback){
+            User.find({},function(err,users){
+               users.forEach(function(u){
+                  Credential.update({'_id':u.access},{'user_id':u},function(err,nbAff){
+                      if(err) return console.error(err);
+                  });
+                   Room.findOne({'_id':u.room},function(err,r){
+                       if(err) return console.error(err);
+                       r.inhabitants.push(u);
+                       r.save();
+                   });
+               });
+            });
         }
-
     ],
 // optional callback
     function(err, results) {
