@@ -30,6 +30,7 @@ export const lastTemperature = (req, res, next) => {
 };
 
 //Temperatures ulterior to a given date
+/*warning not refactor */
 export const periodTemperature = (req, res, next) => {
     Room.findOne({'number':req.params.room},function(err,r) {
         if (err) res.json({"error": err});
@@ -121,14 +122,12 @@ export const monthTemperature = (req, res, next) => {
                     if(goodTemp.has(curr[2])){
                         var val = goodTemp.get(curr[2]);
                         val.push(t.value);
-                        console.log(val);
                         goodTemp.set(curr[2],val);
                     }else{
                         goodTemp.set(curr[2],[t.value]);
                     }
                 }
             });
-            console.log(goodTemp);
             goodTemp.forEach(function(v,c,map){
                 var av =0.0;
                 for(var i=0;i<v.length;i++){
@@ -144,24 +143,39 @@ export const monthTemperature = (req, res, next) => {
 
 //Specific year temperature
 export const yearTemperature = (req, res, next) => {
+    const period = req.params.date.split("-");
     Room.findOne({'number':req.params.room},function(err,r) {
         if (err) res.json({"error": err});
         Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
-            let sortedTemp = [];
-            const period = req.params.date.split("-");
+            let goodTemp = new Map();
+            let averageTemp = [];
+            temperatures.forEach(function(t){
+                let curr = t.date.split("-");
+                let verif = true;
 
-            //Go through all temperatures in db
-            for (let i = 0; i < temperatures.length; i++) {
-                let curr = temperatures[i].date.split("-");
-                //Check that the two formats are correct
-
-                if (parseInt(curr[0]) === parseInt(period[0])) {
-                    sortedTemp.push(temperatures[i]);
+                //Go through athe first two fields of date, hence the given month
+                if (parseInt(curr[j]) !== parseInt(period[j])) {
+                        verif = false;
                 }
-
-            }
-            return res.json({data: sortedTemp}
-            )
+                if (verif) {
+                    if(goodTemp.has(curr[1])){
+                        var val = goodTemp.get(curr[1]);
+                        val.push(t.value);
+                        goodTemp.set(curr[1],val);
+                    }else{
+                        goodTemp.set(curr[1],[t.value]);
+                    }
+                }
+            });
+            goodTemp.forEach(function(v,c,map){
+                var av =0.0;
+                for(var i=0;i<v.length;i++){
+                    av += v[i];
+                }
+                av = av /v.length;
+                averageTemp.push({'date':c,'value':av});
+            });
+            return res.json({data: averageTemp});
         });
     });
 };
