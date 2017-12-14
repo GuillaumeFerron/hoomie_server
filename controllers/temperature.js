@@ -145,6 +145,22 @@ function computeMapAverage(map){
     console.log(result);
     return result;
 }
+
+//Average per month for one room
+export const averageDay = (req,res,next) => {
+    var room = req.params.room;
+    var day = req.params.date.split("-");
+    if(room == "all"){
+        Temperature.find({}, {}).exec(function (err, temperatures) {
+            var averageTemp = computeAverage(temperatures,3,day);
+            res.json({data:averageTemp});
+        });
+    }else{
+        res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/day/'+req.params.date);
+    }
+};
+
+
 //Average per month for one room
 export const averageMonth = (req,res,next) => {
     var room = req.params.room;
