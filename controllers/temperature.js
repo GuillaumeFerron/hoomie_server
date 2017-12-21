@@ -197,7 +197,7 @@ export const averageYear = (req,res,next) => {
 
 
 export const addTemp = (req,res,next) => {
-    //console.log(req.url,req.body.data.length, req.body.data);
+    console.log(req.url,req.body.data.length, req.body.data);
     var docs = req.body.data;
 
     docs.forEach(function(d) {
