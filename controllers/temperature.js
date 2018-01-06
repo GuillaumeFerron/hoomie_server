@@ -199,9 +199,9 @@ export const averageYear = (req,res,next) => {
 export const addTemp = (req,res,next) => {
     console.log(req.url,req.body);
     var docs = req.body.data;
-    res.end("yes");
+
 //add check on room number time and val
-    /*docs.forEach(function(d) {
+    docs.forEach(function(d) {
         Room.findOne({'number': d.room}, function (err, r) {
             if (err) return console.error(err);
             async.series([
@@ -215,7 +215,7 @@ export const addTemp = (req,res,next) => {
                 res.end("yes");
             });
         });
-    });*/
+    });
 
 
 };
