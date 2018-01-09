@@ -210,11 +210,11 @@ export const addTemp = (req,res,next) => {
             }
             async.series([
                 function (callback) {
-                    createTemp(d.date,d.value, r, callback);
+
                     var t = parseFloat(d.value);
                     if(!isNaN(t)){
                          if(d.date.match(/\d{4}((-)\d{2}){5}/))
-                            console.log("date is okay");
+                             createTemp(d.date,d.value, r, callback);
                     }
 
                 }
