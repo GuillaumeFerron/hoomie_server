@@ -203,10 +203,19 @@ export const addTemp = (req,res,next) => {
 //add check on room number time and val
     docs.forEach(function(d) {
         Room.findOne({'number': d.room}, function (err, r) {
-            if (err) return console.error(err);
+            if (err){
+                console.error(err);
+                return res.end();
+
+            }
             async.series([
                 function (callback) {
-                    createTemp(d.date, d.value, r, callback);
+                    t = parseFloat(d.value);
+                    if(!isNan(t)){
+                        if(d.date.match(/(\d{2}(-)){5}\d{2}/))
+                            createTemp(d.date, t, r, callback);
+                    }
+
                 }
 
             ],
