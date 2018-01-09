@@ -213,8 +213,8 @@ export const addTemp = (req,res,next) => {
                     createTemp(d.date,d.value, r, callback);
                     var t = parseFloat(d.value);
                     if(!isNaN(t)){
-                        //if(d.date.match(/\d{4}((-)\d{2}){5}/))
-                        console.log("temp is okay");
+                         if(d.date.match(/\d{4}((-)\d{2}){5}/))
+                            console.log("date is okay");
                     }
 
                 }
