@@ -212,7 +212,7 @@ export const addTemp = (req,res,next) => {
                 function (callback) {
                     t = parseFloat(d.value);
                     if(!isNan(t)){
-                        if(d.date.match(/(\d{2}(-)){5}\d{2}/))
+                        if(d.date.match(/\d{4}((-)\d{2}){5}/))
                             createTemp(d.date, t, r, callback);
                     }
 
