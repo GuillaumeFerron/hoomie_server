@@ -204,7 +204,7 @@ export const addTemp = (req,res,next) => {
     docs.forEach(function(d) {
         Room.findOne({'number': d.room}, function (err, r) {
             if (err){
-                res.end();
+                //res.end();
                 return console.error(err);
 
             }
@@ -212,7 +212,7 @@ export const addTemp = (req,res,next) => {
                 function (callback) {
                     t = parseFloat(d.value);
                     if(!isNaN(t)){
-                        if(d.date.match(/\d{4}((-)\d{2}){5}/))
+                        //if(d.date.match(/\d{4}((-)\d{2}){5}/))
                             createTemp(d.date, t, r, callback);
                     }
 
