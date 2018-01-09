@@ -211,10 +211,10 @@ export const addTemp = (req,res,next) => {
             async.series([
                 function (callback) {
                     t = parseFloat(d.value);
-                    if(!isNan(t)){
+                    /*if(!isNan(t)){
                         if(d.date.match(/\d{4}((-)\d{2}){5}/))
                             createTemp(d.date, t, r, callback);
-                    }
+                    }*/
 
                 }
 
