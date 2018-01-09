@@ -205,7 +205,7 @@ export const addTemp = (req,res,next) => {
         Room.findOne({'number': d.room}, function (err, r) {
             if (err){
                 console.error(err);
-                return res.end();
+                res.end();
 
             }
             async.series([
