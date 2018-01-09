@@ -39,5 +39,5 @@ router.route('/admin/temperature/averageYear/:date/:room').get(TempController.av
 
 
 //POST Temp Routes
-router.route('/temperature/addDoc').post(TempController.addTemp);
+router.route('/sensors/addTemp').post(TempController.addTemp);
 export default router;
