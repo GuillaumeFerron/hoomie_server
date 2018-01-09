@@ -204,16 +204,17 @@ export const addTemp = (req,res,next) => {
     docs.forEach(function(d) {
         Room.findOne({'number': d.room}, function (err, r) {
             if (err){
-                //res.end();
+                res.end();
                 return console.error(err);
 
             }
             async.series([
                 function (callback) {
+                    createTemp(d.date, t, r, callback);
                     t = parseFloat(d.value);
                     if(!isNaN(t)){
                         //if(d.date.match(/\d{4}((-)\d{2}){5}/))
-                            createTemp(d.date, t, r, callback);
+                        console.log("temp is okay");
                     }
 
                 }
