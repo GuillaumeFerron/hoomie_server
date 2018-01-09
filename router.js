@@ -1,10 +1,12 @@
 /**
  Created by Guillaume Ferron on the 10/6/2017
+ Modified by Lisa Martini since nov 2017
  **/
 
 import express, { Router } from 'express';
 // Import index action from movies controller
 import * as TempController from './controllers/temperature';
+import * as AtmosController from './controllers/atmosphere';
 
 // Initialize the router
 const router = Router();
@@ -40,4 +42,6 @@ router.route('/admin/temperature/averageYear/:date/:room').get(TempController.av
 
 //POST Temp Routes
 router.route('/sensors/addTemp').post(TempController.addTemp);
+//POST Atmos Routes
+router.route('/sensors/addAtmos').post(AtmosController.addAtmos);
 export default router;
