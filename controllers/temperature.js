@@ -1,5 +1,6 @@
 /**
  Created by Guillaume Ferron on the 10/6/2017
+ Modified by Lisa Martini since  nov 2017
  **/
 import Temperature from '../models/Temperature';
 import Room from '../models/Room';
@@ -9,14 +10,19 @@ import async from 'async';
 //GET fonction
 //All temperatures
 export const allTemperatures = (req, res, next) => {
-    Room.findOne({'number':req.params.room},function(err,r){
-        if(err) res.json({"error":err});
-        Temperature.find({'room':r}, {}).exec((err, temperatures) => res.json(
-            { data: temperatures}
-        ));
+   try{
+       Room.findOne({'number':req.params.room},function(err,r){
+           if(err) res.json({"error":err});
+           Temperature.find({'room':r}, {}).exec((err, temperatures) => res.json(
+               { data: temperatures}
+           ));
 
-    });
-
+       });
+   }catch(err){
+       console.error("Issue on params"+err);
+       res.status(404);
+       res.send("Wrong params");
+   }
 };
 
 //Last Temperature
@@ -32,73 +38,155 @@ export const lastTemperature = (req, res, next) => {
 //Temperatures ulterior to a given date
 /*warning not refactor */
 export const periodTemperature = (req, res, next) => {
+    try{
+        if(isNaN(parseInt(req.params.room))){
+            res.status(404);
+            res.send("Wrong room");
+            return console.error("Issue on room : it's not a number");
+        }
+    }catch(err){
+        res.status(404);
+        res.send("issue on params");
+        return console.error(("Issue on params"));
+    }
     Room.findOne({'number':req.params.room},function(err,r) {
         if (err) res.json({"error": err});
         Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
             let sortedTemp = [];
-            const period = req.params.date.split("-");
+            try{
+                const period = req.params.date.split("-");
 
-            //Go through all temperatures in db
-            for (let i = 0; i < temperatures.length; i++) {
-                let curr = temperatures[i].date.split("-");
-                let verif = true;
-                //Check that the two formats are correct
-                if (curr.length === period.length) {
-                    //Go through all fields of date
-                    for (let j = 0; j < curr.length; j++) {
-                        //If the current field is lower than the one given as a url parameter, then it is anterior
-                        if (parseInt(curr[j]) < parseInt(period[j])) {
-                            verif = false;
-                            break;
+                //Go through all temperatures in db
+                for (let i = 0; i < temperatures.length; i++) {
+                    let curr = temperatures[i].date.split("-");
+                    let verif = true;
+                    //Check that the two formats are correct
+                    if (curr.length === period.length) {
+                        //Go through all fields of date
+                        for (let j = 0; j < curr.length; j++) {
+                            //If the current field is lower than the one given as a url parameter, then it is anterior
+                            if (parseInt(curr[j]) < parseInt(period[j])) {
+                                verif = false;
+                                break;
+                            }
+                        }
+                        if (verif) {
+                            sortedTemp.push(temperatures[i]);
                         }
                     }
-                    if (verif) {
-                        sortedTemp.push(temperatures[i]);
-                    }
                 }
+                return res.json({data: sortedTemp})
+            }catch(err){
+                res.status(404);
+                res.send("Wrong params");
+                return console.error("Issue on params"+err);
             }
-            return res.json({data: sortedTemp}
-            )
+
         });
     });
 };
 
 //Specific day temperature
 export const dayTemperature = (req, res, next) => {
-    const period = req.params.date.split("-");
-
-    Room.findOne({'number':req.params.room},function(err,r) {
-        if (err) res.json({"error": err});
-        Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
-            var averageTemp = computeAverage(temperatures,3,period);
-            return res.json({data: averageTemp}
-            )
+    try{
+        const period = req.params.date.split("-");
+        if(isNaN(parseInt(req.params.room))){
+            res.status(404);
+            res.send("Wrong room");
+            return console.error("Issue on room : it's not a number");
+        }
+        period.forEach(function (d){
+            if(isNaN(parseInt(d))){
+                res.status(404);
+                res.send("Wrong date");
+                return console.error("Issue on year : it's not a number");
+            }
         });
-    });
+
+        Room.findOne({'number':req.params.room},function(err,r) {
+            if (err) res.json({"error": err});
+            Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
+                if(err) res.json({"error": err});
+                var averageTemp = computeAverage(temperatures,3,period);
+                return res.json({data: averageTemp}
+                )
+            });
+        });
+
+    }catch(err){
+        res.status(404);
+        res.send("Wrong params");
+        return console.error("Issue on params"+err);
+    }
+
+
 };
 
 //Specific month temperature
 export const monthTemperature = (req, res, next) => {
-    const period = req.params.date.split("-");
-    Room.findOne({'number':req.params.room},function(err,r) {
-        if (err) res.json({"error": err});
-        Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
-            var averageTemp = computeAverage(temperatures,2,period);
-            return res.json({data: averageTemp});
+    try{
+        const period = req.params.date.split("-");
+        if(isNaN(parseInt(req.params.room))){
+            res.status(404);
+            res.send("Wrong room");
+            return console.error("Issue on room : it's not a number");
+        }
+        period.forEach(function (d){
+            if(isNaN(parseInt(d))){
+                res.status(404);
+                res.send("Wrong date");
+                return console.error("Issue on year : it's not a number");
+            }
         });
-    });
+
+        Room.findOne({'number':req.params.room},function(err,r) {
+            if (err) res.json({"error": err});
+            Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
+                if (err) res.json({"error": err});
+                var averageTemp = computeAverage(temperatures,2,period);
+                return res.json({data: averageTemp});
+            });
+        });
+
+    }catch(err){
+        res.status(404);
+        res.send("Wrong params");
+        return console.error("Issue on params"+err);
+    }
+
+
 };
 
 //Specific year temperature
 export const yearTemperature = (req, res, next) => {
-    const period = req.params.date.split("-");
-    Room.findOne({'number':req.params.room},function(err,r) {
-        if (err) res.json({"error": err});
-        Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
-            var averageTemp = computeAverage(temperatures,1,period);
-            return res.json({data: averageTemp});
+    try {
+        const period = req.params.date.split("-");
+        if (isNaN(parseInt(req.params.room))) {
+            res.status(404);
+            res.send("Wrong room");
+            return console.error("Issue on room : it's not a number");
+        }
+        period.forEach(function (d) {
+            if (isNaN(parseInt(d))) {
+                res.status(404);
+                res.send("Wrong date");
+                return console.error("Issue on year : it's not a number");
+            }
         });
-    });
+
+        Room.findOne({'number': req.params.room}, function (err, r) {
+            if (err) res.json({"error": err});
+            Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
+                if (err) res.json({"error": err});
+                var averageTemp = computeAverage(temperatures, 1, period);
+                return res.json({data: averageTemp});
+            });
+        });
+    }catch(err){
+        res.status(404);
+        res.send("Wrong params");
+        return console.error("Issue on params"+err);
+    }
 };
 
 function computeAverage(temperatures,date,period ){
@@ -157,16 +245,33 @@ function computeMapAverage(map){
 
 //Average per month for one room
 export const averageDay = (req,res,next) => {
-    var room = req.params.room;
-    var day = req.params.date.split("-");
+    try{
+        var room = req.params.room;
+        var day = req.params.date.split("-");
+        day.forEach(function (d){
+            if(isNaN(parseInt(d))){
+                res.status(404);
+                res.send("Wrong date");
+                return console.error("Issue on date : it's not a number");
+            }
+        });
+    }
+    catch(err){
+        res.status(404);
+        res.send("Wrong params");
+        return console.error("Issue on params"+err);
+    }
     if(room == "all"){
         Temperature.find({}, {}).exec(function (err, temperatures) {
             if(err) return console.log(err);
             var averageTemp = computeAverage(temperatures,3,day);
             res.json({data:averageTemp});
         });
-    }else{
+    }else if (!isNaN(parseInt(room))){
         res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/day/'+req.params.date);
+    }else{
+        res.status(404);
+        res.send("Wrong room param");
     }
 };
 
@@ -176,16 +281,20 @@ export const averageMonth = (req,res,next) => {
     try{
         var room = req.params.room;
         var month = req.params.date.split("-");
-        if(isNaN(parseInt(month))){//careful here
-            console.error("Issue on year : it's not a number");
-            res.status(404);
-            res.send("Wrong date");
-        }
+        month.forEach(function (m){
+            if(isNaN(parseInt(m))){
+                res.status(404);
+                res.send("Wrong date");
+                return console.error("Issue on date : it's not a number");
+
+            }
+        });
     }
     catch(err){
-        console.error("Issue on params"+err);
         res.status(404);
         res.send("Wrong params");
+        return console.error("Issue on params"+err);
+
     }
     if(room == "all"){
         Temperature.find({}, {}).exec(function (err, temperatures) {
@@ -209,15 +318,17 @@ export const averageYear = (req,res,next) => {
         var room = req.params.room;
         var year = req.params.date.split("-");
         if(isNaN(parseInt(year))){
-            console.error("Issue on year : it's not a number");
             res.status(404);
             res.send("Wrong date");
+            return  console.error("Issue on year : it's not a number");
+
         }
     }
    catch(err){
-        console.error("Issue on params"+err);
         res.status(404);
         res.send("Wrong params");
+        return console.error("Issue on params"+err);
+
    }
 
     if(room == "all"){
