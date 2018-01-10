@@ -199,9 +199,9 @@ export const yearTemperature = (req, res, next) => {
 function computeAverage(temperatures,date,period ){
     let goodTemp = new Map();
 
-    console.log(temperatures);
+    //console.log(temperatures);
     temperatures.forEach(function(t){
-        console.log(t);
+        //console.log(t);
         let curr;
         try{
             curr = t.date.split("-");

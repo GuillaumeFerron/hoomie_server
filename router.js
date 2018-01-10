@@ -20,7 +20,7 @@ router.route('/:room/temperature/all').get(TempController.allTemperatures);
 router.route('/:room/temperature/last').get(TempController.lastTemperature);
 
 //Temperatures ulterior to a given date
-router.route('/:room/temperature/period/:date').get(TempController.periodTemperature);
+//router.route('/:room/temperature/period/:date').get(TempController.periodTemperature);
 
 //Specific day temperature
 router.route('/:room/temperature/day/:date').get(TempController.dayTemperature);
@@ -37,6 +37,33 @@ router.route('/admin/temperature/averageDay/:date/:room').get(TempController.ave
 router.route('/admin/temperature/averageMonth/:date/:room').get(TempController.averageMonth);
 //Average per year for one room
 router.route('/admin/temperature/averageYear/:date/:room').get(TempController.averageYear);
+
+
+//GET Atmos routes
+//All atmospheres
+router.route('/:room/atmosphere/all').get(AtmosController.allAtmospheres);
+
+//Last Atmosphere
+router.route('/:room/atmosphere/last').get(AtmosController.lastAtmosphere);
+
+//Atmospheres ulterior to a given date
+//router.route('/:room/atmosphere/period/:date').get(AtmosController.periodAtmosphere);
+
+//Specific day atmosphere
+router.route('/:room/atmosphere/day/:date').get(AtmosController.dayAtmosphere);
+
+//Specific month atmosphere
+router.route('/:room/atmosphere/month/:date').get(AtmosController.monthAtmosphere);
+
+//Specific year atmosphere
+router.route('/:room/atmosphere/year/:date').get(AtmosController.yearAtmosphere);
+
+//Average per day for one room
+router.route('/admin/atmosphere/averageDay/:date/:room').get(AtmosController.averageDay);
+//Average per month for one room
+router.route('/admin/atmosphere/averageMonth/:date/:room').get(AtmosController.averageMonth);
+//Average per year for one room
+router.route('/admin/atmosphere/averageYear/:date/:room').get(AtmosController.averageYear);
 
 
 
