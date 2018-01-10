@@ -248,15 +248,15 @@ export const averageDay = (req,res,next) => {
     try{
         var room = req.params.room;
         var day = req.params.date.split("-");
-        day.forEach(function (d){
+        async.each(day,function (d,callback){
             if(isNaN(parseInt(d))){
-
                 res.status(404);
                 res.send("Wrong date");
                 console.log("Issue on date : it's not a number");
                 return;
             }
-        }).then(function(){
+            callback();
+        },function(err){
                 if(room == "all"){
                     Temperature.find({}, {}).exec(function (err, temperatures) {
                         if(err) return console.log(err);
