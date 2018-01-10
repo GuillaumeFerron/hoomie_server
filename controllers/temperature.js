@@ -107,26 +107,34 @@ function computeAverage(temperatures,date,period ){
     console.log(temperatures);
     temperatures.forEach(function(t){
         console.log(t);
-        let curr = t.date.split("-");
-        let verif = true;
+        let curr;
+        try{
+            curr = t.date.split("-");
+            let verif = true;
 
-        //Go through athe first two fields of date, hence the given month
-        for (let j = 0; j < date; j++) {
-            //If the current field is lower than the one given as a url parameter, then it is anterior
-            if (parseInt(curr[j]) !== parseInt(period[j])) {
-                verif = false;
-                break;
+            //Go through athe first two fields of date, hence the given month
+            for (let j = 0; j < date; j++) {
+                //If the current field is lower than the one given as a url parameter, then it is anterior
+                if (parseInt(curr[j]) !== parseInt(period[j])) {
+                    verif = false;
+                    break;
+                }
+            }
+            if (verif) {
+                if(goodTemp.has(curr[date])){
+                    var val = goodTemp.get(curr[date]);
+                    val.push(t.value);
+                    goodTemp.set(curr[date],val);
+                }else{
+                    goodTemp.set(curr[date],[t.value]);
+                }
             }
         }
-        if (verif) {
-            if(goodTemp.has(curr[date])){
-                var val = goodTemp.get(curr[date]);
-                val.push(t.value);
-                goodTemp.set(curr[date],val);
-            }else{
-                goodTemp.set(curr[date],[t.value]);
-            }
+        catch(err){
+            console.log("Caught error : "+err);
         }
+
+
     });
 
     return  computeMapAverage(goodTemp) ;
@@ -155,7 +163,7 @@ export const averageDay = (req,res,next) => {
         Temperature.find({}, {}).exec(function (err, temperatures) {
             if(err) return console.log(err);
             var averageTemp = computeAverage(temperatures,3,day);
-            res.json({data:0});
+            res.json({data:averageTemp});
         });
     }else{
         res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/day/'+req.params.date);
