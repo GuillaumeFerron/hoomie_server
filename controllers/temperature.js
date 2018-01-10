@@ -256,7 +256,21 @@ export const averageDay = (req,res,next) => {
                 console.log("Issue on date : it's not a number");
                 return;
             }
-        });
+        }).then(function(){
+                if(room == "all"){
+                    Temperature.find({}, {}).exec(function (err, temperatures) {
+                        if(err) return console.log(err);
+                        var averageTemp = computeAverage(temperatures,3,day);
+                        res.json({data:averageTemp});
+                    });
+                }else if (!isNaN(parseInt(room))){
+                    res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/day/'+req.params.date);
+                }else{
+                    res.status(404);
+                    res.send("Wrong room param");
+                }
+            }
+        );
 
     }
     catch(err){
@@ -265,18 +279,7 @@ export const averageDay = (req,res,next) => {
         return res.send("Wrong params");
     }
 
-    if(room == "all"){
-        Temperature.find({}, {}).exec(function (err, temperatures) {
-            if(err) return console.log(err);
-            var averageTemp = computeAverage(temperatures,3,day);
-            res.json({data:averageTemp});
-        });
-    }else if (!isNaN(parseInt(room))){
-        res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/day/'+req.params.date);
-    }else{
-        res.status(404);
-        res.send("Wrong room param");
-    }
+
 };
 
 
