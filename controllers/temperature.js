@@ -19,7 +19,7 @@ export const allTemperatures = (req, res, next) => {
 
        });
    }catch(err){
-       console.error("Issue on params"+err);
+       console.log("Issue on params"+err);
        res.status(404);
        res.send("Wrong params");
    }
@@ -40,12 +40,12 @@ export const lastTemperature = (req, res, next) => {
 export const periodTemperature = (req, res, next) => {
     try{
         if(isNaN(parseInt(req.params.room))){
-            console.error("Issue on room : it's not a number");
+            console.log("Issue on room : it's not a number");
             res.status(404);
             return res.send("Wrong room");
         }
     }catch(err){
-        console.error(("Issue on params"));
+        console.log(("Issue on params"));
         res.status(404);
         return res.send("issue on params");
     }
@@ -77,7 +77,7 @@ export const periodTemperature = (req, res, next) => {
                 }
                 return res.json({data: sortedTemp})
             }catch(err){
-                console.error("Issue on params"+err);
+                console.log("Issue on params"+err);
                 res.status(404);
                 return res.send("Wrong params");
             }
@@ -91,13 +91,13 @@ export const dayTemperature = (req, res, next) => {
     try{
         const period = req.params.date.split("-");
         if(isNaN(parseInt(req.params.room))){
-            console.error("Issue on room : it's not a number");
+            console.log("Issue on room : it's not a number");
             res.status(404);
             return res.send("Wrong room");
         }
         period.forEach(function (d){
             if(isNaN(parseInt(d))){
-                console.error("Issue on year : it's not a number");
+                console.log("Issue on year : it's not a number");
                 res.status(404);
                 return res.send("Wrong date");
             }
@@ -106,7 +106,7 @@ export const dayTemperature = (req, res, next) => {
         Room.findOne({'number':req.params.room},function(err,r) {
             if (err) return res.json({"error": err});
             Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
-                if (err) console.error("error"+ err);
+                if (err) console.log("error"+ err);
                 var averageTemp = computeAverage(temperatures,3,period);
                 return res.json({data: averageTemp}
                 )
@@ -114,7 +114,7 @@ export const dayTemperature = (req, res, next) => {
         });
 
     }catch(err){
-        console.error("Issue on params"+err);
+        console.log("Issue on params"+err);
         res.status(404);
         res.send("Wrong params");
     }
@@ -127,13 +127,13 @@ export const monthTemperature = (req, res, next) => {
     try{
         const period = req.params.date.split("-");
         if(isNaN(parseInt(req.params.room))){
-            console.error("Issue on room : it's not a number");
+            console.log("Issue on room : it's not a number");
             res.status(404);
             return res.send("Wrong room");
         }
         period.forEach(function (d){
             if(isNaN(parseInt(d))){
-                console.error("Issue on year : it's not a number");
+                console.log("Issue on year : it's not a number");
                 res.status(404);
                 return res.send("Wrong date");
             }
@@ -142,14 +142,14 @@ export const monthTemperature = (req, res, next) => {
         Room.findOne({'number':req.params.room},function(err,r) {
             if (err) return res.json({"error": err});
             Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
-                if (err) console.error("error"+ err);
+                if (err) console.log("error"+ err);
                 var averageTemp = computeAverage(temperatures,2,period);
                 return res.json({data: averageTemp});
             });
         });
 
     }catch(err){
-        console.error("Issue on params"+err);
+        console.log("Issue on params"+err);
         res.status(404);
         res.send("Wrong params");
     }
@@ -162,13 +162,13 @@ export const yearTemperature = (req, res, next) => {
     try {
         const period = req.params.date.split("-");
         if (isNaN(parseInt(req.params.room))) {
-            console.error("Issue on room : it's not a number");
+            console.log("Issue on room : it's not a number");
             res.status(404);
             return res.send("Wrong room");
         }
         period.forEach(function (d) {
             if (isNaN(parseInt(d))) {
-                console.error("Issue on year : it's not a number");
+                console.log("Issue on year : it's not a number");
                 res.status(404);
                 return res.send("Wrong date");
             }
@@ -177,13 +177,13 @@ export const yearTemperature = (req, res, next) => {
         Room.findOne({'number': req.params.room}, function (err, r) {
             if (err) return res.json({"error": err});
             Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
-                if (err) console.error("error"+ err);
+                if (err) console.log("error"+ err);
                 var averageTemp = computeAverage(temperatures, 1, period);
                 return res.json({data: averageTemp});
             });
         });
     }catch(err){
-        console.error("Issue on params"+err);
+        console.log("Issue on params"+err);
         res.status(404);
         res.send("Wrong params");
     }
@@ -219,7 +219,7 @@ function computeAverage(temperatures,date,period ){
             }
         }
         catch(err){
-            console.error("Caught error : "+err);
+            console.log("Caught error : "+err);
         }
 
 
@@ -250,14 +250,14 @@ export const averageDay = (req,res,next) => {
         var day = req.params.date.split("-");
         day.forEach(function (d){
             if(isNaN(parseInt(d))){
-                console.error("Issue on date : it's not a number");
+                console.log("Issue on date : it's not a number");
                 res.status(404);
                 return res.send("Wrong date");
             }
         });
     }
     catch(err){
-        console.error("Issue on params"+err);
+        console.log("Issue on params"+err);
         res.status(404);
         return res.send("Wrong params");
     }
@@ -283,7 +283,7 @@ export const averageMonth = (req,res,next) => {
         var month = req.params.date.split("-");
         month.forEach(function (m){
             if(isNaN(parseInt(m))){
-                console.error("Issue on date : it's not a number");
+                console.log("Issue on date : it's not a number");
                 res.status(404);
                 return res.send("Wrong date");
 
@@ -291,7 +291,7 @@ export const averageMonth = (req,res,next) => {
         });
     }
     catch(err){
-        console.error("Issue on params"+err);
+        console.log("Issue on params"+err);
         res.status(404);
         return res.send("Wrong params");
 
@@ -318,14 +318,14 @@ export const averageYear = (req,res,next) => {
         var room = req.params.room;
         var year = req.params.date.split("-");
         if(isNaN(parseInt(year))){
-            console.error("Issue on year : it's not a number");
+            console.log("Issue on year : it's not a number");
             res.status(404);
             return res.send("Wrong date");
 
         }
     }
    catch(err){
-        console.error("Issue on params"+err);
+        console.log("Issue on params"+err);
         res.status(404);
         return res.send("Wrong params");
 
@@ -362,7 +362,7 @@ export const addTemp = (req,res,next) => {
             Room.findOne({'number': d.room}, function (err, r) {
                 if (err){
                     res.end();
-                    return console.error(err);
+                    return console.log(err);
 
                 }
                 async.series([
@@ -385,7 +385,7 @@ export const addTemp = (req,res,next) => {
         });
     }
    catch(err){
-        console.error("Caught exception while adding doc :"+err);
+        console.log("Caught exception while adding doc :"+err);
         return res.end("no");
    }
 
