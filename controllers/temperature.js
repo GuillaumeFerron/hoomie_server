@@ -131,7 +131,7 @@ function computeAverage(temperatures,date,period ){
             }
         }
         catch(err){
-            console.log("Caught error : "+err);
+            console.error("Caught error : "+err);
         }
 
 
@@ -173,24 +173,52 @@ export const averageDay = (req,res,next) => {
 
 //Average per month for one room
 export const averageMonth = (req,res,next) => {
-    var room = req.params.room;
-    var month = req.params.date.split("-");
+    try{
+        var room = req.params.room;
+        var month = req.params.date.split("-");
+        if(isNaN(parseInt(month))){//careful here
+            console.error("Issue on year : it's not a number");
+            res.status(404);
+            res.send("Wrong date");
+        }
+    }
+    catch(err){
+        console.error("Issue on params"+err);
+        res.status(404);
+        res.send("Wrong params");
+    }
     if(room == "all"){
         Temperature.find({}, {}).exec(function (err, temperatures) {
             if(err) return console.log(err);
             var averageTemp = computeAverage(temperatures,2,month);
             res.json({data:averageTemp});
         });
-    }else{
+    }else if (!isNaN(parseInt(room))){
         res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/month/'+req.params.date);
+    }else{
+        res.status(404);
+        res.send("Wrong room param");
     }
+
 };
 
 
 //Average per year for one room
 export const averageYear = (req,res,next) => {
-    var room = req.params.room;
-    var year = req.params.date.split("-");
+    try{
+        var room = req.params.room;
+        var year = req.params.date.split("-");
+        if(isNaN(parseInt(year))){
+            console.error("Issue on year : it's not a number");
+            res.status(404);
+            res.send("Wrong date");
+        }
+    }
+   catch(err){
+        console.error("Issue on params"+err);
+        res.status(404);
+        res.send("Wrong params");
+   }
 
     if(room == "all"){
         Temperature.find({}, {}).exec(function (err, temperatures) {
@@ -199,9 +227,13 @@ export const averageYear = (req,res,next) => {
             res.json({data:averageTemp});
         });
 
-    }else{
+    }else if(!isNaN(parseInt(room))){
         res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/year/'+year);
+    }else{
+        res.status(404);
+        res.send("Wrong room param");
     }
+
 };
 
 //Post function
@@ -209,35 +241,40 @@ export const averageYear = (req,res,next) => {
 
 
 export const addTemp = (req,res,next) => {
-    console.log(req.url,req.body);
-    var docs = req.body.data;
+    try{
+        console.log(req.url,req.body);
+        var docs = req.body.data;
 
-//add check on room number time and val
-    docs.forEach(function(d) {
-        Room.findOne({'number': d.room}, function (err, r) {
-            if (err){
-                res.end();
-                return console.error(err);
-
-            }
-            async.series([
-                function (callback) {
-
-                    var t = parseFloat(d.value);
-                    if(!isNaN(t)){
-                         if(d.date.match(/\d{4}((-)\d{2}){5}/))
-                             createTemp(d.date,d.value, r, callback);
-                    }
+        //add check on room number time and val
+        docs.forEach(function(d) {
+            Room.findOne({'number': d.room}, function (err, r) {
+                if (err){
+                    res.end();
+                    return console.error(err);
 
                 }
+                async.series([
+                        function (callback) {
 
-            ],
-            function (err,results) {
-                console.log("finish");
-                res.end("yes");
+                            var t = parseFloat(d.value);
+                            if(!isNaN(t)){
+                                if(d.date.match(/\d{4}((-)\d{2}){5}/))
+                                    createTemp(d.date,d.value, r, callback);
+                            }
+
+                        }
+
+                    ],
+                    function (err,results) {
+                        console.log("finish");
+                        res.end("yes");
+                    });
             });
         });
-    });
+    }
+   catch(err){
+        return console.error("Caught exception while adding doc :"+err);
+   }
 
 
 };
