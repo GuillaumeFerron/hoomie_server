@@ -250,9 +250,10 @@ export const averageDay = (req,res,next) => {
         var day = req.params.date.split("-");
         day.forEach(function (d){
             if(isNaN(parseInt(d))){
-                console.log("Issue on date : it's not a number");
+
                 res.status(404);
-                return res.send("Wrong date");
+                res.send("Wrong date");
+                return console.log("Issue on date : it's not a number");
             }
         });
     }
