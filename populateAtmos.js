@@ -16,7 +16,7 @@ mongoose.connect(mongoDB,{
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-//db.collection("atmospheres").remove();
+db.dropCollection("atmospheres");
 
 
 var rooms=[];
@@ -24,7 +24,7 @@ var atmos=[];
 var atmos2=[];
 var atmos3=[];
 
-
+Room.update({},{'atmospheres': []},{multi:true},function(err,nbAffected){console.log(nbAffected);});
 
 
 function createAtmos(date, co, no2,room,atmosArray,cb){
@@ -116,18 +116,14 @@ function createAtmospheres3(cb) {
 
 
 async.series([
-        function(callback){
-            Room.find({}, function (err, rs) {
-                if (err) return console.error(err);
-                rs.forEach(function(r){
-                    r.atmospheres = [];
-                    r.save();
-                });
-            });
-        },
+
         createAtmospheres,
         createAtmospheres2,
         createAtmospheres3,
+        function(callback){
+
+            Room.findOne({'number':203},function(err,r){console.log(r.atmospheres);});
+        }
 
     ],
 // optional callback
@@ -139,3 +135,4 @@ async.series([
         //All done, disconnect from database
         db.close();
     });
+
