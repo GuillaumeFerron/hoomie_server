@@ -186,7 +186,8 @@ export const averageYear = (req,res,next) => {
     if(room == "all"){
         Temperature.find({}, {}).exec(function (err, temperatures) {
             if(err) return console.log(err);
-            var averageTemp = computeAverage(temperatures,1,year);
+            console.log(temperatures);
+            var averageTemp = 0//computeAverage(temperatures,1,year);
             res.json({data:averageTemp});
         });
 
