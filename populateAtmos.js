@@ -16,7 +16,7 @@ mongoose.connect(mongoDB,{
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
+db.atmospheres.drop();
 
 
 var rooms=[];
@@ -116,9 +116,17 @@ function createAtmospheres3(cb) {
 
 
 async.series([
+        function(callback){
+            Room.findOne({'number': 205}, function (err, r) {
+                if (err) return console.error(err);
+                r.atmospheres = [];
+                r.save();
+            });
+        },
         createAtmospheres,
         createAtmospheres2,
-        createAtmospheres3
+        createAtmospheres3,
+
     ],
 // optional callback
     function(err, results) {
