@@ -103,9 +103,10 @@ export const yearTemperature = (req, res, next) => {
 
 function computeAverage(temperatures,date,period ){
     let goodTemp = new Map();
-    let averageTemp = [];
-   // console.log(temperatures, period);
+
+    console.log(temperatures);
     temperatures.forEach(function(t){
+        console.log(t);
         let curr = t.date.split("-");
         let verif = true;
 
@@ -154,7 +155,7 @@ export const averageDay = (req,res,next) => {
         Temperature.find({}, {}).exec(function (err, temperatures) {
             if(err) return console.log(err);
             var averageTemp = computeAverage(temperatures,3,day);
-            res.json({data:averageTemp});
+            res.json({data:0});
         });
     }else{
         res.redirect('http://hoomieserver.herokuapp.com/'+room+'/temperature/day/'+req.params.date);
@@ -186,8 +187,7 @@ export const averageYear = (req,res,next) => {
     if(room == "all"){
         Temperature.find({}, {}).exec(function (err, temperatures) {
             if(err) return console.log(err);
-            console.log(temperatures);
-            var averageTemp = 0//computeAverage(temperatures,1,year);
+            var averageTemp = computeAverage(temperatures,1,year);
             res.json({data:averageTemp});
         });
 
