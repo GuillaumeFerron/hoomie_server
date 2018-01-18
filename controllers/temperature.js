@@ -265,30 +265,42 @@ function computeAverage(temperatures,date,period,all ){
 
     });
 
-    return  computeMapAverage(goodTemp) ;
+    return  computeMapAverage(goodTemp,all) ;
 }
 
-function computeMapAverage(map){
+function computeMapAverage(map,all){
     var result =[];
     console.log("map",map)
-    map.forEach(function(v,c,m){
-        var av = 0.0;
-        var av2 = 0.0;
-        var av3 = 0.0;
-        for(var i=0;i<v[0].length;i++){
-            av += v[0][i];
-        }
-        for(var i=0;i<v[1].length;i++){
-            av2 += v[1][i];
-        }
-        for(var i=0;i<v[2].length;i++){
-            av3 += v[2][i];
-        }
-        av = av /v[0].length;
-        av2 = av2/v[1].length;
-        av3 = av3/v[2].length;
-        result.push({'date':c,'203':av,'204':av2,'205':av3});
-    });
+    if(all){
+        map.forEach(function(v,c,m){
+            var av = 0.0;
+            var av2 = 0.0;
+            var av3 = 0.0;
+            for(var i=0;i<v[0].length;i++){
+                av += v[0][i];
+            }
+            for(var i=0;i<v[1].length;i++){
+                av2 += v[1][i];
+            }
+            for(var i=0;i<v[2].length;i++){
+                av3 += v[2][i];
+            }
+            av = av /v[0].length;
+            av2 = av2/v[1].length;
+            av3 = av3/v[2].length;
+            result.push({'date':c,'203':av,'204':av2,'205':av3});
+        });
+    }else{
+        map.forEach(function(v,c,m){
+            var av = 0.0;
+            for(var i=0;i<v[0].length;i++){
+                av += v[0][i];
+            }
+            av = av /v[0].length;
+            result.push({'date':c,'value':av});
+        });
+    }
+
     console.log(result);
     return result;
 }
