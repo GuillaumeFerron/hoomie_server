@@ -301,7 +301,7 @@ export const averageDay = (req,res,next) => {
             callback();
         },function(err){
                 if(room == "all"){
-                    Temperature.find({}, {}).exec(function (err, temperatures) {
+                    Temperature.find({}).populate('room','number').exec(function (err, temperatures) {
                         if(err) return console.log(err);
                         var averageTemp = computeAverage(temperatures,3,day,true);
                         res.json({data:averageTemp});
@@ -341,7 +341,7 @@ export const averageMonth = (req,res,next) => {
             callback();
         },function(err){
             if(room == "all"){
-                Temperature.find({}, {}).exec(function (err, temperatures) {
+                Temperature.find({}, {}).populate('room','number').exec(function (err, temperatures) {
                     if(err) return console.log(err);
                     var averageTemp = computeAverage(temperatures,2,month,true);
                     res.json({data:averageTemp});
@@ -380,7 +380,7 @@ export const averageYear = (req,res,next) => {
             callback();
         },function(err){
             if(room == "all"){
-                Temperature.find({}, {}).exec(function (err, temperatures) {
+                Temperature.find({}, {}).populate('room','number').exec(function (err, temperatures) {
                     if(err) return console.log(err);
                     var averageTemp = computeAverage(temperatures,1,year,true);
                     res.json({data:averageTemp});
