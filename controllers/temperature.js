@@ -219,20 +219,20 @@ function computeAverage(temperatures,date,period,all ){
                 if(all){
                     if(goodTemp.has(curr[date])){
                         var r = goodTemp.get(curr[date]);
-                        if(r.has(t.room)){
-                            var val = r.get(t.room);
+                        if(r.has(t.room.number)){
+                            var val = r.get(t.room.number);
                             val.push(t.value);
-                            r.set(t.room,val);
+                            r.set(t.room.number,val);
                             goodTemp.set(curr[date],r);
                         }else{
                             var m =new Map();
-                            m.set(t.room,[t.value]);
+                            m.set(t.room.number,[t.value]);
                             goodTemp.set(curr[date],m);
                         }
 
                     }else{
                         var m =new Map();
-                        m.set(t.room,[t.value]);
+                        m.set(t.room.number,[t.value]);
                         goodTemp.set(curr[date],m);
                     }
                 }else{
@@ -253,7 +253,7 @@ function computeAverage(temperatures,date,period,all ){
 
 
     });
-
+    console.log(goodTemp);
     return  computeMapAverage(goodTemp,all) ;
 }
 
