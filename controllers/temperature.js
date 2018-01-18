@@ -109,7 +109,7 @@ export const dayTemperature = (req, res, next) => {
                 if (err) return res.json({"error": err});
                 Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
                     if (err) console.log("error" + err);
-                    var averageTemp = computeAverage(temperatures, 3, period);
+                    var averageTemp = computeAverage(temperatures, 3, period,false);
                     return res.json({data: averageTemp}
                     )
                 });
@@ -147,7 +147,7 @@ export const monthTemperature = (req, res, next) => {
                 if (err) return res.json({"error": err});
                 Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
                     if (err) console.log("error" + err);
-                    var averageTemp = computeAverage(temperatures, 2, period);
+                    var averageTemp = computeAverage(temperatures, 2, period,false);
                     return res.json({data: averageTemp});
                 });
             });
@@ -184,7 +184,7 @@ export const yearTemperature = (req, res, next) => {
                 if (err) return res.json({"error": err});
                 Temperature.find({'room': r}, {}).exec(function (err, temperatures) {
                     if (err) console.log("error" + err);
-                    var averageTemp = computeAverage(temperatures, 1, period);
+                    var averageTemp = computeAverage(temperatures, 1, period,false);
                     return res.json({data: averageTemp});
                 });
             });
@@ -196,7 +196,7 @@ export const yearTemperature = (req, res, next) => {
     }
 };
 
-function computeAverage(temperatures,date,period ){
+function computeAverage(temperatures,date,period,all ){
     let goodTemp = new Map();
 
     //console.log(temperatures);
@@ -216,13 +216,35 @@ function computeAverage(temperatures,date,period ){
                 }
             }
             if (verif) {
-                if(goodTemp.has(curr[date])){
-                    var val = goodTemp.get(curr[date]);
-                    val.push(t.value);
-                    goodTemp.set(curr[date],val);
+                if(all){
+                    if(goodTemp.has(curr[date])){
+                        var r = goodTemp.get(curr[date]);
+                        if(r.has(t.room)){
+                            var val = r.get(t.room);
+                            val.push(t.value);
+                            r.set(t.room,val);
+                            goodTemp.set(curr[date],r);
+                        }else{
+                            var m =new Map();
+                            m.set(t.room,[t.value]);
+                            goodTemp.set(curr[date],m);
+                        }
+
+                    }else{
+                        var m =new Map();
+                        m.set(t.room,[t.value]);
+                        goodTemp.set(curr[date],m);
+                    }
                 }else{
-                    goodTemp.set(curr[date],[t.value]);
+                    if(goodTemp.has(curr[date])){
+                        var val = goodTemp.get(curr[date]);
+                        val.push(t.value);
+                        goodTemp.set(curr[date],val);
+                    }else{
+                        goodTemp.set(curr[date],[t.value]);
+                    }
                 }
+
             }
         }
         catch(err){
@@ -232,19 +254,33 @@ function computeAverage(temperatures,date,period ){
 
     });
 
-    return  computeMapAverage(goodTemp) ;
+    return  computeMapAverage(goodTemp,all) ;
 }
 
-function computeMapAverage(map){
+function computeMapAverage(map,all){
     var result =[];
     console.log("map",map)
     map.forEach(function(v,c,m){
-        var av =0.0;
-        for(var i=0;i<v.length;i++){
-            av += v[i];
+        if(all){
+            var rooms = []
+            v.forEach(function(t,r,vm){
+                var av =0.0;
+                for(var i=0;i<t.length;i++){
+                    av += t[i];
+                }
+                av = av /t.length;
+                rooms.push({'room':r,'value':av});
+            })
+            result.push({'date':c,'rooms':rooms});
+        }else{
+            var av =0.0;
+            for(var i=0;i<v.length;i++){
+                av += v[i];
+            }
+            av = av /v.length;
+            result.push({'date':c,'value':av});
         }
-        av = av /v.length;
-        result.push({'date':c,'value':av});
+
     });
     console.log(result);
     return result;
@@ -267,7 +303,7 @@ export const averageDay = (req,res,next) => {
                 if(room == "all"){
                     Temperature.find({}, {}).exec(function (err, temperatures) {
                         if(err) return console.log(err);
-                        var averageTemp = computeAverage(temperatures,3,day);
+                        var averageTemp = computeAverage(temperatures,3,day,true);
                         res.json({data:averageTemp});
                     });
                 }else if (!isNaN(parseInt(room))){
@@ -307,7 +343,7 @@ export const averageMonth = (req,res,next) => {
             if(room == "all"){
                 Temperature.find({}, {}).exec(function (err, temperatures) {
                     if(err) return console.log(err);
-                    var averageTemp = computeAverage(temperatures,2,month);
+                    var averageTemp = computeAverage(temperatures,2,month,true);
                     res.json({data:averageTemp});
                 });
             }else if (!isNaN(parseInt(room))){
@@ -346,7 +382,7 @@ export const averageYear = (req,res,next) => {
             if(room == "all"){
                 Temperature.find({}, {}).exec(function (err, temperatures) {
                     if(err) return console.log(err);
-                    var averageTemp = computeAverage(temperatures,1,year);
+                    var averageTemp = computeAverage(temperatures,1,year,true);
                     res.json({data:averageTemp});
                 });
 
