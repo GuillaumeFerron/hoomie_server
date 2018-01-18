@@ -228,8 +228,9 @@ function computeAverage(temperatures,date,period,all ){
                             var m =new Map();
                             m.set(t.room.number,[t.value]);
                             goodTemp.set(curr[date],m);
-                        }
 
+                        }
+                        console.log(goodTemp)
                     }else{
                         var m =new Map();
                         m.set(t.room.number,[t.value]);
@@ -253,7 +254,7 @@ function computeAverage(temperatures,date,period,all ){
 
 
     });
-    console.log(goodTemp);
+
     return  computeMapAverage(goodTemp,all) ;
 }
 
