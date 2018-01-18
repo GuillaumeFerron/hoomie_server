@@ -235,13 +235,13 @@ function computeAverage(temperatures,date,period,all ){
                     }else{
                         switch(t.room.number){
                             case 203:
-                                goodTemp.set(curr[date],[t.value,0,0]);
+                                goodTemp.set(curr[date],[[t.value],[0],[0]]);
                                 break;
                             case 204:
-                                goodTemp.set(curr[date],[0,t.value,0]);
+                                goodTemp.set(curr[date],[[0],[t.value],[0]]);
                                 break;
                             case 205:
-                                goodTemp.set(curr[date],[0,0,t.value]);
+                                goodTemp.set(curr[date],[[0],[0],[t.value]]);
                                 break;
                         }
 
