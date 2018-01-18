@@ -293,10 +293,10 @@ function computeMapAverage(map,all){
     }else{
         map.forEach(function(v,c,m){
             var av = 0.0;
-            for(var i=0;i<v[0].length;i++){
-                av += v[0][i];
+            for(var i=0;i<v.length;i++){
+                av += v[i];
             }
-            av = av /v[0].length;
+            av = av /v.length;
             result.push({'date':c,'value':av});
         });
     }
