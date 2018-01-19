@@ -17,15 +17,15 @@ mongoose.connect(mongoDB,{
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
-/*Room.findOne({'number':205},function(err,r){
+/*
+Room.findOne({'number':205},function(err,r){
     if(err)return console.log(err);
     Temperature.find({'room':r},function(err,temps){
         if(err)return console.log(err);
         temps.forEach(function(t){
             let curr = t.date.split('-');
 
-            if(parseInt(curr[0])==2017 && parseInt(curr[1]) == 12 && parseInt(curr[2]) == 14){
+            if(parseInt(curr[0])==2018 && curr[1] == '01' && (curr[2] == '6' || curr[2]=='8' || curr[2]=='9')  ){
                 console.log(t._id);
                 var ind = r.temperatures.indexOf(t);
                 r.temperatures.splice(ind,1);
@@ -35,7 +35,10 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
             }
         })
     });
-});*/
+
+});
+*/
+
 
 var rooms=[];
 var temps=[];//203
@@ -133,7 +136,8 @@ function createTemperatures2(cb) {
 
 
 function createAtmospheres(cb) {
-    var days =[{'d':4,'h':[16]},{'d':6,'h':[13]},{'d':8,'h':[9,10,11,15,16,17]},{'d':9,'h':[9,10,11,13,14,15]},{'d':10,'h':[10,23]},{'d':11,'h':[8,9]},{'d':18,'h':[10,11,16]}]
+    var days =[{'d':4,'h':[16]},{'d':6,'h':[13]},{'d':8,'h':[9,10,11,15,16,17]},{'d':9,'h':[9,10,11,13,14,15]}]
+       // {'d':10,'h':[10,23]},{'d':11,'h':[8,9]},{'d':18,'h':[10,11,16]}]
 
     var dates =[]
     for(var l=0;l<days.length;l++){
@@ -181,7 +185,7 @@ function createAtmospheres2(cb) {
 
 
 async.series([
-        createTemperatures,
+        //createTemperatures,
         //createTemperatures2,
         createAtmospheres,
         //createAtmospheres2,
