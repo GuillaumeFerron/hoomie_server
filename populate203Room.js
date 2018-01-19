@@ -46,7 +46,7 @@ var atmos2=[];//205
 function createTemp(date, temperature,room, tempArray,cb){
     Room.findOne({'number': room}, function (err, r) {
         if (err) return console.error(err);
-        var tempDetail = {date: date, value: temperature};
+        var tempDetail = {date: date, value: temperature,room:r};
 
         var temp = new Temperature(tempDetail);
 
@@ -93,11 +93,18 @@ function createAtmos(date, co, no2,room,atmosArray,cb){
 function createTemperatures(cb) {
     var days =[{'d':4,'h':[16]},{'d':6,'h':[13]},{'d':8,'h':[9,10,11,15,16,17]},{'d':9,'h':[9,10,11,13,14,15]},{'d':10,'h':[10,23]},{'d':11,'h':[8,9]},{'d':18,'h':[10,11,16]}]
 
-    async.forEach(days,function(day,callback){
+    var dates =[]
+    for(var l=0;l<days.length;l++){
+        var day = days[l];
         for(var hours=0;hours<day['h'].length;hours++){
+            var h = day['h'][hours];
+            if (h < 10) h = "0" + h;
             var val = Math.random() * (26.50 - 20.00) + 20.00;
-            createTemp("2018-01" + "-" + day['d'] + "-" + day['h'][hours] + "-00-00",val, 203,temps,callback);
+            dates.push({d:day['d'],h:h,val:val});
         }
+    }
+    async.forEach(dates,function(date,callback){
+        createTemp("2018-01" + "-" + date['d'] + "-" + date['h'] + "-00-00",date['val'], 203,temps,callback);
     },cb);
 
 
@@ -107,13 +114,20 @@ function createTemperatures(cb) {
 
 function createTemperatures2(cb) {
     var days =[{'d':4,'h':[16]},{'d':6,'h':[13]},{'d':8,'h':[9,10,11,15,16,17]},{'d':9,'h':[9,10,11,13,14,15]},{'d':10,'h':[10,23]},{'d':11,'h':[8,9]},{'d':18,'h':[10,11,16]}]
-
-    async.forEach(days,function(day,callback){
+    var dates =[]
+    for(var l=0;l<days.length;l++){
+        var day = days[l];
         for(var hours=0;hours<day['h'].length;hours++){
+            var h = day['h'][hours];
+            if (h < 10) h = "0" + h;
             var val = Math.random() * (22.80-18.50) + 18.50;
-            createTemp("2018-01" + "-" + day['d'] + "-" + day['h'][hours] + "-00-00", val, 205,temps2,callback);
+            dates.push({d:day['d'],h:h,val:val});
         }
+    }
+    async.forEach(dates,function(date,callback){
+        createTemp("2018-01" + "-" + date['d'] + "-" + date['h'] + "-00-00",date['val'], 205,temps2,callback);
     },cb);
+
 
 }
 
@@ -121,13 +135,22 @@ function createTemperatures2(cb) {
 function createAtmospheres(cb) {
     var days =[{'d':4,'h':[16]},{'d':6,'h':[13]},{'d':8,'h':[9,10,11,15,16,17]},{'d':9,'h':[9,10,11,13,14,15]},{'d':10,'h':[10,23]},{'d':11,'h':[8,9]},{'d':18,'h':[10,11,16]}]
 
-    async.forEach(days,function(day,callback){
+    var dates =[]
+    for(var l=0;l<days.length;l++){
+        var day = days[l];
         for(var hours=0;hours<day['h'].length;hours++){
+            var h = day['h'][hours];
+            if (h < 10) h = "0" + h;
             var co = Math.random() * (95.00 - 10.00) + 10.00;
             var no2 = Math.random() * (0.45 - 0.01) + 0.01;
-            createAtmos("2018-01" + "-" + day['d'] + "-" + day['h'][hours] + "-00-00", co,no2, 203,atmos,callback);
+            createAtmos
+            dates.push({d:day['d'],h:h,co:co,no2:no2});
         }
+    }
+    async.forEach(dates,function(date,callback){
+        createAtmos("2018-01" + "-" + date['d'] + "-" + date['h'] + "-00-00", date['co'],date['no2'], 203,atmos,callback);
     },cb);
+
 
 
 }
@@ -137,14 +160,22 @@ function createAtmospheres(cb) {
 function createAtmospheres2(cb) {
     var days =[{'d':4,'h':[16]},{'d':6,'h':[13]},{'d':8,'h':[9,10,11,15,16,17]},{'d':9,'h':[9,10,11,13,14,15]},{'d':10,'h':[10,23]},{'d':11,'h':[8,9]},{'d':18,'h':[10,11,16]}]
 
-    async.forEach(days,function(day,callback){
+    var dates =[]
+    for(var l=0;l<days.length;l++){
+        var day = days[l];
         for(var hours=0;hours<day['h'].length;hours++){
+            var h = day['h'][hours];
+            if (h < 10) h = "0" + h;
             var co = Math.random() * (45.00 - 20.00) + 20.00;
             var no2 = Math.random() * (0.95 - 0.10) + 0.10;
-            createAtmos("2018-01" + "-" + day['d'] + "-" + day['h'][hours] + "-00-00", co,no2, 205,atmos2,callback);
+            createAtmos
+            dates.push({d:day['d'],h:h,co:co,no2:no2});
         }
+    }
+    async.forEach(dates,function(date,callback){
+        createAtmos("2018-01" + "-" + date['d'] + "-" + date['h'] + "-00-00", date['co'],date['no2'], 205,atmos2,callback);
     },cb);
-
+    
 }
 
 
