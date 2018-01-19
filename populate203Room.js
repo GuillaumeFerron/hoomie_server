@@ -99,12 +99,12 @@ function createTemperatures(cb) {
         for(var hours=0;hours<day['h'].length;hours++){
             var h = day['h'][hours];
             if (h < 10) h = "0" + h;
-            var val = Math.random() * (26.50 - 20.00) + 20.00;
+            var val = Math.random() * (24.50 - 13.00) + 13.00;
             dates.push({d:day['d'],h:h,val:val});
         }
     }
     async.forEach(dates,function(date,callback){
-        createTemp("2018-01" + "-" + date['d'] + "-" + date['h'] + "-00-00",date['val'], 203,temps,callback);
+        createTemp("2018-01" + "-" + date['d'] + "-" + date['h'] + "-00-00",date['val'], 204,temps,callback);
     },cb);
 
 
@@ -148,7 +148,7 @@ function createAtmospheres(cb) {
         }
     }
     async.forEach(dates,function(date,callback){
-        createAtmos("2018-01" + "-" + date['d'] + "-" + date['h'] + "-00-00", date['co'],date['no2'], 203,atmos,callback);
+        createAtmos("2018-01" + "-" + date['d'] + "-" + date['h'] + "-00-00", date['co'],date['no2'], 204,atmos,callback);
     },cb);
 
 
@@ -175,19 +175,19 @@ function createAtmospheres2(cb) {
     async.forEach(dates,function(date,callback){
         createAtmos("2018-01" + "-" + date['d'] + "-" + date['h'] + "-00-00", date['co'],date['no2'], 205,atmos2,callback);
     },cb);
-    
+
 }
 
 
 
 async.series([
         createTemperatures,
-        createTemperatures2,
+        //createTemperatures2,
         createAtmospheres,
-        createAtmospheres2,
+        //createAtmospheres2,
         function(callback){
 
-            Room.findOne({'number':203},function(err,r){console.log(r.temperatures);});
+            Room.findOne({'number':204},function(err,r){console.log(r.temperatures);});
         }
 
     ],
