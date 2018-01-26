@@ -1,5 +1,29 @@
 # hoomie_server
 
+26/01/18:
+
+Current server's state :
+- Only temperatures and Atmospheres can be added and displayed
+- Several script exists to populate the db as wished
+- Right now on temperatures controller :
+    *you can get the mean value for a room by year, month or day
+    *you can add a temperature depending on information received
+    *you can send mean value by year, month and day for all rooms if all is true (cf compute Average ) the data sent to the application is as follow :
+    {data:[{date:d1,'203':val203,'204':val204,'205':val205},{date:d2,'203':val203,'204':val204,'205':val205}...]}
+    It's not the best way to send this data but it could have meant refactoring most of the server and we didn't have time to do it.
+- Right now on atmospheres controller :
+    *you can get the mean value for Co and No2 for a room by year, month or day
+    *you can add a atmospheres depending on information received
+    *you can send mean value by year, month or day but all rooms are counted in the average not the same distinction as in temperatures controller
+    (because, there were not enough time to do it, and the processing in the application didn't work for temperatures of all rooms, so it wasn't useful)
+
+
+Many improvements could have been performed on this server but it is useless while the mobile application cannot display correctly any information.
+No work has been made to create and authenticate users in db due to lack of time.
+Do remember that when a change is made it must be committed and pushed to master of the current github repo but mainly to heroku master repo to be effective.
+
+
+________________________________________________________________________________________________________________________
 27/11/2017:
 heroku restart --app hoomieserver
  Warning to push anything on heroku server once need to use git shell + heroku login otherwise it doesn't work

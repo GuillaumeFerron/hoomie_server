@@ -93,7 +93,7 @@ function createAtmos(date, co, no2,room,atmosArray,cb){
 }
 
 function createTemperatures(cb) {
-    var days =[{'d':'22','h':[9,10,11,14,15,16]}
+    var days =[{'d':'25','h':[7,8,9]}
         /*{'d':'04','h':[16]},{'d':'06','h':[13]},{'d':'08','h':[9,10,11,15,16,17]},{'d':'09','h':[9,10,11,13,14,15]},{'d':10,'h':[10,23]},{'d':11,'h':[8,9]},{'d':18,'h':[10,11,16]}*/]
 
     var dates =[]
@@ -102,12 +102,13 @@ function createTemperatures(cb) {
         for(var hours=0;hours<day['h'].length;hours++){
             var h = day['h'][hours];
             if (h < 10) h = "0" + h;
-            var val = Math.random() * (24.50 - 13.00) + 13.00;
+            var val = Math.random() * (24.50 - 22.0) + 22.00;
+            if (h == "09")val = 18;
             dates.push({d:day['d'],h:h,val:val});
         }
     }
     async.forEach(dates,function(date,callback){
-        createTemp("2018-01" + "-" + date['d'] + "-" + date['h'] + "-00-00",date['val'], 203,temps,callback);
+        createTemp("2018-01" + "-" + date['d'] + "-" + date['h'] + "-00-00",date['val'], 204,temps,callback);
     },cb);
 
 
@@ -116,7 +117,7 @@ function createTemperatures(cb) {
 
 
 function createTemperatures2(cb) {
-    var days =[{'d':'22','h':[9,10,11,14,15,16]}
+    var days =[{'d':'25','h':[7,8,9,10,11]}
         /*{'d':'04','h':[16]},{'d':'06','h':[13]},{'d':'08','h':[9,10,11,15,16,17]},{'d':'09','h':[9,10,11,13,14,15]},{'d':10,'h':[10,23]},{'d':11,'h':[8,9]},{'d':18,'h':[10,11,16]}*/]
     var dates =[]
     for(var l=0;l<days.length;l++){
@@ -137,7 +138,7 @@ function createTemperatures2(cb) {
 
 
 function createAtmospheres(cb) {
-    var days =[{'d':'22','h':[9,10,11,14,15,16]}
+    var days =[{'d':'25','h':[7,8,9]}
         /*{'d':'04','h':[16]},{'d':'06','h':[13]},{'d':'08','h':[9,10,11,15,16,17]},{'d':'09','h':[9,10,11,13,14,15]},{'d':10,'h':[10,23]},{'d':11,'h':[8,9]},{'d':18,'h':[10,11,16]}*/]
 
     var dates =[]
@@ -153,7 +154,7 @@ function createAtmospheres(cb) {
         }
     }
     async.forEach(dates,function(date,callback){
-        createAtmos("2018-01" + "-" + date['d'] + "-" + date['h'] + "-00-00", date['co'],date['no2'], 203,atmos,callback);
+        createAtmos("2018-01" + "-" + date['d'] + "-" + date['h'] + "-00-00", date['co'],date['no2'], 204,atmos,callback);
     },cb);
 
 
@@ -163,7 +164,7 @@ function createAtmospheres(cb) {
 
 
 function createAtmospheres2(cb) {
-    var days =[{'d':'22','h':[9,10,11,14,15,16]}
+    var days =[{'d':'25','h':[7,8,9,10,11]}
         /*{'d':'04','h':[16]},{'d':'06','h':[13]},{'d':'08','h':[9,10,11,15,16,17]},{'d':'09','h':[9,10,11,13,14,15]},{'d':10,'h':[10,23]},{'d':11,'h':[8,9]},{'d':18,'h':[10,11,16]}*/]
 
     var dates =[]
@@ -188,12 +189,12 @@ function createAtmospheres2(cb) {
 
 async.series([
         createTemperatures,
-        createTemperatures2,
+        //createTemperatures2,
         createAtmospheres,
-        createAtmospheres2,
+       // createAtmospheres2,
         function(callback){
 
-            Room.findOne({'number':203},function(err,r){console.log(r.temperatures);});
+            //Room.findOne({'number':203},function(err,r){console.log(r.temperatures);});
         }
 
     ],
